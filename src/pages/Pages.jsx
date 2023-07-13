@@ -14,7 +14,6 @@ const Pages = () => {
        </div>
        </div>
        </div>
-       this test
     </main>
     </>
   )
