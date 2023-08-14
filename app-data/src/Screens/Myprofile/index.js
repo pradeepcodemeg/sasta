@@ -241,9 +241,9 @@ const Myprofile = ({ navigation, route }) => {
                                 onChangeText={name => validateemail(name)} />
                         </View>
                     </View>
-                    <TouchableOpacity onPress={() => { setdeletepopup(true); }} style={{ marginTop: 20 }}>
+                    {/* <TouchableOpacity onPress={() => { setdeletepopup(true); }} style={{ marginTop: 20 }}>
                         <Text style={{ fontSize: 16, marginTop: 0, color: "#FE5B5B", fontWeight: "500" }}>Delete Account</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={{ width: wp("90%"), alignSelf: 'center',marginTop:20 }}>
                         <ButtonField label={'Update Profile'} submitfun={submitfun} />
                     </View>

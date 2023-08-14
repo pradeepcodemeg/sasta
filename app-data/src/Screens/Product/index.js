@@ -64,7 +64,7 @@ const Product = ({ navigation,route }) => {
             if(search_call){
                 search_call="&search="+search;
             }
-            let url = 'products?order=DESC&order_by=id&row_count='+row_count+'&page='+pageLoad+'&user_id='+userID+'&token='+userToken+by_brand_id_call+by_category_id_call+by_type_call+search_call;
+            let url = 'products?order=DESC&order_by=id&row_count='+row_count+'&page='+newpageLoad+'&user_id='+userID+'&token='+userToken+by_brand_id_call+by_category_id_call+by_type_call+search_call;
             ApiDataService.Getapi(url).then(response => {
                
                 if(response.data.length > 0)

@@ -99,7 +99,7 @@ const Home = ({ navigation, route }) => {
         } else if (hours >= 18 && hours < 20) {
             settimesec('Good evening');
         } else {
-            settimesec('Good night');
+            settimesec('Good evening');
         }
     }, [])
 
@@ -193,7 +193,7 @@ const Home = ({ navigation, route }) => {
                     renderItem={({ item }) =>
                         <>
                             <View style={{ ...StylesGloble.homeheaderouter, marginTop: 10, paddingLeft: 5, paddingRight: 5 }}>
-                                <TouchableOpacity onPress={() => navigation.navigate('Setting')} style={{ ...StylesGloble.homeheaderprofile,marginLeft:-8 }}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Myprofile')} style={{ ...StylesGloble.homeheaderprofile,marginLeft:-8 }}>
                                     {
                                         (!userimg || userimg == ''|| userimg == null ) ? (
                                             <Avatar  width={55} height={55} />

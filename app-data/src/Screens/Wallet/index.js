@@ -39,12 +39,12 @@ const Wallet = ({ navigation,route }) => {
                 </ImageBackground>
                 
                     <View style={{...StylesGloble.oneline,marginTop:-5}}>
-                        <View >
-                            <Text style={{fontSize:16,fontWeight:"500",color:"#000000"}}>Add money to SASTA App</Text>
-                        </View>
-                        <TouchableOpacity onPress={()=>{ navigation.navigate('Category')}} style={{marginLeft:"auto"}}>
-                            <Text style={{fontSize:14,fontWeight:"500",color:"#9DC45A"}}>How It works</Text>
+                        <TouchableOpacity >
+                            <Text style={{fontSize:16,fontWeight:"500",color:"#000000"}}>Add money to your wallet</Text>
                         </TouchableOpacity>
+                        {/* <TouchableOpacity onPress={()=>{ navigation.navigate('Category')}} style={{marginLeft:"auto"}}>
+                            <Text style={{fontSize:14,fontWeight:"500",color:"#9DC45A"}}>How It works</Text>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={{width:"100%",height:'auto',marginTop:15,borderColor:"#C4C4C450",borderRadius:8,borderWidth:1}}>
                         <View style={{padding:10}}>

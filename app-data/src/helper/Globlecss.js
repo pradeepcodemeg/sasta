@@ -258,7 +258,7 @@ export const StylesGloble = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
         width:wp('29%'),
-        backgroundColor:"#dfe3d8",
+        backgroundColor:"#F5F9EF",
         borderRadius:5
     },
     searchcattext:{
@@ -301,7 +301,7 @@ export const StylesGloble = StyleSheet.create({
         flexDirection:"row",
         padding:20,
         paddingHorizontal:35,
-        marginHorizontal:20,
+        marginHorizontal:0,
         // borderRadius:8,
         alignItems:"center",
         justifyContent:"center",
