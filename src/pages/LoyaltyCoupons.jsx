@@ -1,6 +1,7 @@
 import React from 'react'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
 import LoyaltyCouponTable from '../components/loyalty-program/loyalty-coupons/LoyaltyCouponTable'
+import Pagination from '../components/pagination/Pagination'
 
 const  LoyaltyCoupons = () => {
   return (
@@ -11,6 +12,7 @@ const  LoyaltyCoupons = () => {
       <div className="card">
       <div className="card-body">
          <LoyaltyCouponTable />
+         <Pagination />
           </div>
           </div>
         </div>

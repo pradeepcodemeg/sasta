@@ -31,7 +31,7 @@ const TabLayout = () => {
           })}
         </ul>
       </div>
-        <NavLink to="/Orders" className='viewall-btn'><span>View All</span></NavLink> 
+        <NavLink to="/order-list" className='viewall-btn'><span>View All</span></NavLink> 
       </div>
         </div>
       <div className="card-body pt-4">

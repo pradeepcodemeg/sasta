@@ -169,7 +169,7 @@ const RefundOrderTable = () => {
                   <td className="">{item.PaymentMode}</td>
                   <td className="">{item.orderRecevied}</td>
                   <td className="">{item.deliveryTimeSlot}</td>
-                  <td className="">{item.orderStatus}</td>
+                  <td className="">   <span className="badge badge-success">{item.orderStatus}</span></td>
                   <td className=''>
                     <div className="d-flex justify-content-end align-items-center flex-shrink-0">
                       <Link to="/" className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">

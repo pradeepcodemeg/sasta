@@ -3,9 +3,9 @@ import React from 'react'
 function RefundTopCard() {
   return (
     <>
-    <div className='rfundtop-card'>
+    {/* <div className='rfundtop-card'> */}
       <div className="row">
-    <div className="col-md-12">
+    <div className="col-md-3">
         <div className="card mb-15">
             <div className="card-body dashcrd-bdy">
                 <div className="erning-flx">
@@ -20,7 +20,7 @@ function RefundTopCard() {
             </div>
         </div>
     </div>
-    <div className="col-md-12">
+    <div className="col-md-3">
         <div className="card mb-15">
             <div className="card-body dashcrd-bdy">
             <div className="erning-flx">
@@ -35,7 +35,7 @@ function RefundTopCard() {
             </div>
         </div>
     </div>
-    <div className="col-md-12">
+    <div className="col-md-3">
         <div className="card mb-15">
             <div className="card-body dashcrd-bdy">
             <div className="erning-flx">
@@ -51,7 +51,7 @@ function RefundTopCard() {
         </div>
     </div>
 </div>
-</div>
+{/* </div> */}
     </>
   )
 }

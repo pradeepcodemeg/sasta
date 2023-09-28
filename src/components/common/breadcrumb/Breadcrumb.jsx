@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import AddUserForm from '../../user/AddUserForm';
-import ImportUser from '../../user/ImportUser';
+import AddUserForm from '../../users/user/AddUserForm';
+import ImportUser from '../../users/user/ImportUser';
 import AddCategoryForm from '../../manage-grocery/category/AddCategoryForm';
 import EditCategoryForm from '../../manage-grocery/category/EditCategoryForm';
 import AddSubCategoryForm from '../../manage-grocery/sub-category/AddSubCategoryForm';
 import UploadInventoryPopup from '../../manage-grocery/upload-inventory-image/UploadInventoryPopup';
 import AddConfigurPointForm from '../../loyalty-program/configure-points/AddConfigurPointForm';
 import AddLoyaltyCouponForm from '../../loyalty-program/loyalty-coupons/AddLoyaltyCouponForm';
+import AddBrandForm from '../../manage-grocery/brand/AddBrandForm';
+import EditBrandForm from '../../manage-grocery/brand/EditBrandForm';
+import AddCreditForm from '../../financial/credit-points/AddCreditForm';
 
 
 function Breadcrumb({ data }) {
   const [toggleUserModal, setToggleUserModal] = useState(false)
   const [toggleImportUserModal, setToggleImportUserModal] = useState(false)
   const [toggleAddCategryModal, setToggleAddCategryModal] = useState(false)
+  const [toggleAddCreditModal, setToggleAddCreditModal] = useState(false)
   const [toggleEditCategryModal, setToggleEditCategryModal] = useState(false)
+  const [toggleAddBrandModal, setToggleAddBrandModal] = useState(false)
+  const [toggleEditBrandModal, setToggleEditBrandModal] = useState(false)
   const [toggleAddSubCategryModal, setToggleAddSubCategryModal] = useState(false)
   const [toggleUploadInventoryModal, setToggleUploadInventoryModal] = useState(false)
   const [toggleAddConfigurPointModal, setToggleAddConfigurPointModal] = useState(false)
@@ -76,7 +82,45 @@ function Breadcrumb({ data }) {
               <ImportUser toggleImportUserModal={toggleImportUserModal} setToggleImportUserModal={setToggleImportUserModal}/>
             </div>}
             {/* end-userlist-data */}
-
+            {/* start-user-group-data */}
+            {location.pathname === "/group" && <div className='userlist-pg'>
+                    <div className='brdcrmbbtn-main'>
+                      <div className='brdcrmbbtn-inner'>
+                        <Link  to="/add-group" className='btn btn-shadow btn-primary'>Add Group</Link>
+                      </div>
+                      <div className='brdcrmbbtn-inner'>
+                        <Link  to="/push-notification-list" className='btn btn-shadow btn-primary'>Push Notification</Link>
+                      </div>
+                    </div>
+                  </div>}
+            {/* end-user-group-data */}
+            {/* start-push-notification-list-data */}
+            {location.pathname === "/push-notification-list" && <div className='userlist-pg'>
+                    <div className='brdcrmbbtn-main'>
+                      <div className='brdcrmbbtn-inner'>
+                        <Link  to="/push-notification" className='btn btn-shadow btn-primary'>Add Push Notification</Link>
+                      </div>
+                    </div>
+                  </div>}
+            {/* end-push-notification-list-data */}
+             {/*start-vendor-data */}
+             {location.pathname === "/vendor" && <div className='userlist-pg'>
+                    <div className='brdcrmbbtn-main'>
+                      <div className='brdcrmbbtn-inner'>
+                        <Link  to="/add-vendor" className='btn btn-shadow btn-primary'>Add Vendor</Link>
+                      </div>
+                    </div>
+                  </div>}
+            {/* end-vendor-data */}
+            {/* start-user-detail-data */}
+              {location.pathname === "/user-detail" && <div className='userlist-pg'>
+                    <div className='brdcrmbbtn-main'>
+                      <div className='brdcrmbbtn-inner'>
+                        <button className='btn btn-shadow btn-primary'>Export</button>
+                      </div>
+                    </div>
+                  </div>}
+            {/* end-user-detail-data */}
 
 
             {/* start-Orderlist-data */}
@@ -129,6 +173,19 @@ function Breadcrumb({ data }) {
             </div>}
             {/* End-sub-category-data */}
 
+
+             {/* start-brand-data */}
+             {location.pathname === "/brand" && <div className='ordrlist-pg'>
+              <div className='brdcrmbbtn-main'>
+              <div className='brdcrmbbtn-inner'>
+                  <button onClick={()=>{setToggleAddBrandModal(p=> !p)}} className='btn btn-shadow btn-primary'>Add Brand</button>
+                </div>
+              </div>
+              <AddBrandForm toggleAddBrandModal={toggleAddBrandModal} setToggleAddBrandModal={setToggleAddBrandModal}/>
+              <EditBrandForm toggleEditBrandModal={toggleEditBrandModal} setToggleEditBrandModal={setToggleEditBrandModal}/>
+            </div>}
+            {/* End-brand-data */}
+
              {/* start-product-data */}
              {location.pathname === "/product" && <div className='ordrlist-pg'>
               <div className='brdcrmbbtn-main'>
@@ -178,6 +235,16 @@ function Breadcrumb({ data }) {
             </div>}
             {/* End-discount-coupon-data */}
 
+  {/* start-credit-points-data */}
+  {location.pathname === "/credit-points" && <div className='ordrlist-pg'>
+              <div className='brdcrmbbtn-main'>
+                <div className='brdcrmbbtn-inner'>
+                  <button onClick={()=>{setToggleAddCreditModal(p=> !p)}} className='btn btn-shadow btn-primary'>Add Credit</button>
+                </div>
+              </div>
+              <AddCreditForm toggleAddCreditModal={toggleAddCreditModal} setToggleAddCreditModal={setToggleAddCreditModal}/>
+            </div>}
+            {/* End-credit-points-data */}
 
               {/* start-alert-message-data */}
             {location.pathname === "/alert-message" && <div className='ordrlist-pg'>

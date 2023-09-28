@@ -2,6 +2,7 @@ import React from 'react'
 import SoldItemReportTable from '../components/reports/sold-item-report/SoldItemReportTable'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
 import SoldItemReportFilter from '../components/reports/sold-item-report/SoldItemReportFilter'
+import Pagination from '../components/pagination/Pagination'
 
 const SoldItemReport = () => {
   return (
@@ -17,6 +18,7 @@ const SoldItemReport = () => {
         <div className="card">
       <div className="card-body">
       <SoldItemReportTable />
+      <Pagination />
         </div>
         </div>
         </div>

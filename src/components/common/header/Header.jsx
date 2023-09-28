@@ -73,13 +73,13 @@ function Header() {
                   <span style={{ "backgroundImage": "url(https://dev.codemeg.com/caly-backend/public/uploads/EmployeeImage/1680874750.png)" }}></span>
                 </div>
                 <div className="admin-name" onClick={() => setShowProfile(p => !p)}>
-                  <p className="">admin</p>
+                  <p className="">admin<em><i class="fa fa-angle-down" aria-hidden="true"></i></em></p>
                 </div>
               </div>
               {showProfile && <div className="hdrmenu-drpdwn">
                 <ul>
                   <li>
-                    <Link to={'/'}>
+                    <Link to={'/profile-update'}>
                       <span>
                         <i className="fa fa-user-o" aria-hidden="true"></i>
                       </span>
@@ -95,7 +95,7 @@ function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link to={'/'}>
+                    <Link to={'/login'}>
                       <span>
                         <i className="fa fa-sign-out" aria-hidden="true"></i>
                       </span>

@@ -1,2 +1,0 @@
-export const SET_PRODUCTDTL_DATA = 'SET_PRODUCTDTL_DATA';
-

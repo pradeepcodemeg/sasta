@@ -2,6 +2,7 @@ import React from 'react'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
 import DailyOrderTable from '../components/reports/daily-order/DailyOrderTable'
 import DailyOrderFilter from '../components/reports/daily-order/DailyOrderFilter'
+import Pagination from '../components/pagination/Pagination'
 
 const DailyOrder = () => {
   return (
@@ -17,6 +18,7 @@ const DailyOrder = () => {
         <div className="card">
       <div className="card-body">
         <DailyOrderTable />
+        <Pagination />
         </div>
         </div>
         </div>

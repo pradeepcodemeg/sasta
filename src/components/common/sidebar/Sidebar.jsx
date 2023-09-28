@@ -392,9 +392,26 @@ const Sidebar = () => {
       url: "/",
     },
     {
-      title: "User",
+      title: "Users",
       icon: "fa fa-user-o",
-      url: "/user",
+      url: "/order",
+      subcategories: [
+        {
+          title: "User List",
+          icon: "",
+          url: "/user",
+        },
+        {
+          title: "Group",
+          icon: "",
+          url: "/group",
+        },
+      ],
+    },
+    {
+      title: "Vendor",
+      icon: "fa fa-diamond",
+      url: "/vendor",
     },
     {
       title: "Order",
@@ -427,6 +444,11 @@ const Sidebar = () => {
           title: "Sub Category",
           icon: "",
           url: "/sub-category",
+        },
+        {
+          title: "Brand",
+          icon: "",
+          url: "/brand",
         },
         {
           title: "Product",
@@ -474,6 +496,11 @@ const Sidebar = () => {
           title: "Alert Message",
           icon: "",
           url: "/alert-message",
+        },
+        {
+          title: "Push Notification",
+          icon: "",
+          url: "/push-notification-list",
         },
       ],
     },
@@ -545,6 +572,18 @@ const Sidebar = () => {
           title: "Faq",
           icon: "",
           url: "/faq",
+        },
+      ],
+    },
+    {
+      title: "Financial",
+      icon: "fa fa-credit-card-alt",
+      url: "/Financial",
+      subcategories: [
+        {
+          title: "Credit Points",
+          icon: "",
+          url: "/credit-points",
         },
       ],
     },

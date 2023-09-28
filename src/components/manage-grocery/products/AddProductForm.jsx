@@ -36,19 +36,23 @@ const AddProductForm = () => {
     const [value, setValue] = useState(null);
     const [tags, setTags] = useState([]);
 
+    const [multipleVariant,setMultipleVariant] = useState([1])
     // Options for Select
     const [category, setCategory] = useState(null)
     const [subCategory, setSubCategory] = useState(null)
     const [gstType, setGstType] = useState(null)
     const [stockStatus, setStockStatusType] = useState(null)
-
-
+    const [brand, setBrand] = useState(null)
+    const [updatePrdcts, setUpdatePrdcts] = useState(null)
     const Categoryoptions = [
         { value: 'Fruits & Vegetables', label: 'Fruits & Vegetables' },
         { value: 'Cakes & bakery', label: 'Cakes & bakery' },
         { value: 'Drink', label: 'Drink' },
     ];
-
+    const Brandoptions = [
+        { value: 'Britania', label: 'Britania' },
+        { value: 'Nestle', label: 'Nestle' },
+    ];
     const SubCategryoptions = [
         { value: 'Apple', label: 'Apple' },
         { value: 'Mango', label: 'Mango' },
@@ -59,9 +63,12 @@ const AddProductForm = () => {
         { value: 'Inclusive', label: 'Inclusive' },
         { value: 'Exclusive', label: 'Exclusive' },
     ];
+    const UpdatePrdctsoptions = [
+        { value: 'Static Sections ', label: 'Static Sections ' },
+        { value: 'Best Deals', label: 'Best Deals' },
+        { value: 'Top Trends sections', label: 'Top Trends sections' },
+    ];
     const StockStatusoptions = [
-
-      
         { value: 'Continue selling after out of stock', label: 'Continue selling after out of stock' },
         { value: 'Show out of stock on minimum quantity', label: 'Show out of stock on minimum quantity' },
         { value: 'Show out of stock on threshold quantity', label: 'Show out of stock on threshold quantity' },
@@ -105,6 +112,7 @@ const AddProductForm = () => {
         }
     };
 
+
     return (
         <>
             <div className='main-form'>
@@ -113,13 +121,21 @@ const AddProductForm = () => {
                         <h3>Product Description</h3>
                     </div>
                     <div className='row'>
-                        <div className='col-md-4'>
+                        <div className='col-md-3'>
                             <div className="mb-3 fv-row">
                                 <label className="form-label">Product Name <i>*</i></label>
                                 <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
                             </div>
                         </div>
-                        <div className='col-md-4'>
+                        <div className='col-md-3'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Brand <i>*</i></label>
+                                <div className='slectbx-singel'>
+                                    <Select styles={customStyles} placeholder={'Select Brand'} onChange={(e) => { setBrand(e.value) }} options={Brandoptions} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-md-3'>
                             <div className="mb-3 fv-row">
                                 <label className="form-label">Category <i>*</i></label>
                                 <div className='slectbx-singel'>
@@ -127,7 +143,7 @@ const AddProductForm = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-md-4'>
+                        <div className='col-md-3'>
                             <div className="mb-3 fv-row">
                                 <label className="form-label">Sub Category <i>*</i></label>
                                 <div className='slectbx-singel'>
@@ -162,7 +178,7 @@ const AddProductForm = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='col-md-12'>
+                        <div className='col-md-6'>
                             <div className="mb-3 fv-row">
                                 <label className="form-label">Tags <i>*</i></label>
                                 <input type="text" name="Date" onKeyUp={(e) => addTags(e)} className="form-control" placeholder="Enter multiple tags here" />
@@ -177,6 +193,14 @@ const AddProductForm = () => {
                                         )
                                     })}
                                 </div>}
+                            </div>
+                        </div>
+                        <div className='col-md-6'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Mark As Special <i>*</i></label>
+                                <div className='slectbx-singel'>
+                                    <Select styles={customStyles} placeholder={'Mark as Special'} onChange={(e) => { setUpdatePrdcts(e.value) }} options={UpdatePrdctsoptions} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -210,9 +234,16 @@ const AddProductForm = () => {
                 </div>
 
                 <div className='prdt-inr'>
-                    <div className="form-heading">
+                    <div className="form-heading flxform-hdng">
                         <h3>Variant</h3>
+                        <div className=''>
+                            <button onClick={()=>{setMultipleVariant(p=>[...p,p.length + 1])}} className='btn btn-primary'>Add More Variant</button>
+                        </div>
                     </div>
+                    {/* add var */}
+                    {multipleVariant.map((item,idx)=>{
+                        return(
+                            <div className='add-variant'>
                     <div className='row'>
                         <div className='col-md-4'>
                             <div className="mb-3 fv-row">
@@ -281,6 +312,10 @@ const AddProductForm = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
+                        )
+                    })}
+
                 </div>
 
 

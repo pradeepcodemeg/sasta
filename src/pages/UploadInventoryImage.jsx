@@ -1,6 +1,7 @@
 import React from 'react'
 import InventoryImageTable from '../components/manage-grocery/upload-inventory-image/InventoryImageTable'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
+import Pagination from '../components/pagination/Pagination'
 
 const UploadInventoryImage = () => {
   return (
@@ -13,6 +14,7 @@ const UploadInventoryImage = () => {
       <div className="card">
       <div className="card-body">
            <InventoryImageTable />
+           <Pagination />
          </div>
          </div>
          </div>

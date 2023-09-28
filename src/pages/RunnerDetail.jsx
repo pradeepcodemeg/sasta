@@ -2,6 +2,7 @@ import React from 'react'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
 import RunnerProfileDetail from '../components/runner-management/RunnerProfileDetail'
 import RunnerHistoryTable from '../components/runner-management/RunnerHistoryTable'
+import Pagination from '../components/pagination/Pagination'
 
 
 function RunnerDetail() {
@@ -19,6 +20,7 @@ function RunnerDetail() {
               <div className="card mt-3">
                 <div className="card-body">
                   <RunnerHistoryTable />
+                  <Pagination />
                 </div>
               </div>
             </div>

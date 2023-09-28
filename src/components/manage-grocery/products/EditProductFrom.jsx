@@ -35,20 +35,23 @@ const EditProductFrom = () => {
 
   const [value, setValue] = useState(null);
   const [tags, setTags] = useState([]);
-
+  const [multipleVariant,setMultipleVariant] = useState([1])
   // Options for Select
   const [category, setCategory] = useState(null)
   const [subCategory, setSubCategory] = useState(null)
   const [gstType, setGstType] = useState(null)
   const [stockStatus, setStockStatusType] = useState(null)
-
+  const [brand, setBrand] = useState(null)
 
   const Categoryoptions = [
     { value: 'Fruits & Vegetables', label: 'Fruits & Vegetables' },
     { value: 'Cakes & bakery', label: 'Cakes & bakery' },
     { value: 'Drink', label: 'Drink' },
   ];
-
+  const Brandoptions = [
+    { value: 'Britania', label: 'Britania' },
+    { value: 'Nestle', label: 'Nestle' },
+];
   const SubCategryoptions = [
     { value: 'Apple', label: 'Apple' },
     { value: 'Mango', label: 'Mango' },
@@ -113,13 +116,21 @@ const EditProductFrom = () => {
             <h3>Product Description</h3>
           </div>
           <div className='row'>
-            <div className='col-md-4'>
+            <div className='col-md-3'>
               <div className="mb-3 fv-row">
                 <label className="form-label">Product Name <i>*</i></label>
                 <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
               </div>
             </div>
-            <div className='col-md-4'>
+            <div className='col-md-3'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Brand <i>*</i></label>
+                                <div className='slectbx-singel'>
+                                    <Select styles={customStyles} placeholder={'Select Brand'} onChange={(e) => { setBrand(e.value) }} options={Brandoptions} />
+                                </div>
+                            </div>
+                        </div>
+            <div className='col-md-3'>
               <div className="mb-3 fv-row">
                 <label className="form-label">Category <i>*</i></label>
                 <div className='slectbx-singel'>
@@ -127,7 +138,7 @@ const EditProductFrom = () => {
                 </div>
               </div>
             </div>
-            <div className='col-md-4'>
+            <div className='col-md-3'>
               <div className="mb-3 fv-row">
                 <label className="form-label">Sub Category <i>*</i></label>
                 <div className='slectbx-singel'>
@@ -210,78 +221,89 @@ const EditProductFrom = () => {
         </div>
 
         <div className='prdt-inr'>
-          <div className="form-heading">
-            <h3>Variant</h3>
-          </div>
-          <div className='row'>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Sort <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">SKU <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Weight/No of Units/Quantity <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Unit <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">MRP <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Discount <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Price <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Max Quantity Per Order <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Stock <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Min Stock Alert <i>*</i></label>
-                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
-              </div>
-            </div>
-            <div className='col-md-4'>
-              <div className="mb-3 fv-row">
-                <label className="form-label">Variant Out of Stock Status <i>*</i></label>
-                <Select styles={customStyles} placeholder={'Select Stock Staus'} onChange={(e) => { setStockStatusType(e.value) }} options={StockStatusoptions} />
-              </div>
-            </div>
-          </div>
-        </div>
+                    <div className="form-heading flxform-hdng">
+                        <h3>Variant</h3>
+                        <div className=''>
+                            <button onClick={()=>{setMultipleVariant(p=>[...p,p.length + 1])}} className='btn btn-primary'>Add More Variant</button>
+                        </div>
+                    </div>
+                    {/* add var */}
+                    {multipleVariant.map((item,idx)=>{
+                        return(
+                            <div className='add-variant'>
+                    <div className='row'>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Sort <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">SKU <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Weight/No of Units/Quantity <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Unit <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">MRP <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Discount <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Price <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Max Quantity Per Order <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Stock <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Min Stock Alert <i>*</i></label>
+                                <input type="text" name="Date" className="form-control" placeholder="Enter Product Name Title" />
+                            </div>
+                        </div>
+                        <div className='col-md-4'>
+                            <div className="mb-3 fv-row">
+                                <label className="form-label">Variant Out of Stock Status <i>*</i></label>
+                                <Select styles={customStyles} placeholder={'Select Stock Staus'} onChange={(e) => { setStockStatusType(e.value) }} options={StockStatusoptions} />
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                        )
+                    })}
+
+                </div>
 
 
         <div className='prdt-inr'>

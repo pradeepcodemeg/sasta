@@ -4,6 +4,7 @@ import UserInformation from '../components/orders/order-detail/UserInformation'
 import OrderInformation from '../components/orders/order-detail/OrderInformation'
 import OrderedTableList from '../components/orders/order-detail/OrderedTableList'
 import ChargeBreakdown from '../components/orders/order-detail/ChargeBreakdown'
+import Pagination from '../components/pagination/Pagination'
 
 
 const OrderDetail = () => {
@@ -24,6 +25,7 @@ const OrderDetail = () => {
         <div className="card">
 		<div className="card-body">
            <OrderedTableList />
+           <Pagination />
         </div>
         </div>
         </div>

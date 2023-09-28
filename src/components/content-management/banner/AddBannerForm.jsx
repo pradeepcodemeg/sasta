@@ -48,14 +48,16 @@ const AddBannerForm = () => {
     { value: 'Top banner', label: 'Top banner' },
     { value: 'Web Footer Banner', label: 'Web Footer Banner' },
     { value: 'About Us Banner', label: 'About Us Banner' },
+    { value: 'Offers', label: 'Offers' },
+    { value: 'Mini Slider', label: 'Mini Slider' },
   ];
   const Statusoptions = [
     { value: 'Active', label: 'Active' },
     { value: 'In Active', label: 'In Active' },
   ];
   const Categoryoptions = [
-    { value: 'Fruits & Vegetables', label: 'Fruits & Vegetables' },
-    { value: 'Breads', label: 'Breads' },
+    { value: 'Diwali Offers', label: 'Diwali Offers' },
+    { value: 'Holi offers', label: 'Holi Offers' },
   ];
   
   return (

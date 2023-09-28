@@ -2,6 +2,7 @@ import React from 'react'
 
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
 import OutOfStockTable from '../components/manage-grocery/out-of-stock-variants/OutOfStockTable'
+import Pagination from '../components/pagination/Pagination'
 
 const OutOfStockVariants = () => {
     return (
@@ -14,6 +15,7 @@ const OutOfStockVariants = () => {
                             <div className="card">
                                 <div className="card-body">
                                     <OutOfStockTable />
+                                    <Pagination />
                                 </div>
                             </div>
                         </div>

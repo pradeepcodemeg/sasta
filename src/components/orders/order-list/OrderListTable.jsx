@@ -16,7 +16,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderstatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1624,
@@ -28,7 +28,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1625,
@@ -40,7 +40,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1626,
@@ -52,7 +52,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1627,
@@ -64,7 +64,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1628,
@@ -76,7 +76,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1629,
@@ -88,7 +88,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1630,
@@ -100,7 +100,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1631,
@@ -112,7 +112,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   },
   {
     orderId: 1632,
@@ -124,7 +124,7 @@ const orders = [
     deliveryTimeSlot: '2023-06-07 12:30 PM',
     contactNumber: '123-456-7890',
     orderStatus: 'Delivered',
-    DeliveryTimeSlot: 'Delivered',
+    DeliveryTimeSlot: '10:00 AM -7:00 PM',
   }
 ];
 
@@ -189,7 +189,7 @@ const OrderListTable = () => {
                   <td className="">{item.orderRecevied}</td>
                   <td className="">{item.DeliveryTimeSlot}</td>
                   <td className="">
-                  <div className='ordrstats-slectbx'>
+                  <div className='ordrstats-slectbx'  style={{whiteSpace:'nowrap'}}>
                     <SelectBoxTwo options={optionsStatus} newStatus={orderStatus} setNewStatus={setOrderStatus} />
                     </div>
                   </td>
@@ -199,7 +199,7 @@ const OrderListTable = () => {
                     </div>
                   </td>
                   <td className="">
-                     <div className='runerstats-slectbx'>
+                     <div className='runerstats-slectbx'  style={{whiteSpace:'nowrap'}}>
                         <SelectBoxTwo options={optionsSEC} newStatus={runnerStatus} setNewStatus={setRunnerStatus} />
                     </div>
                   </td>

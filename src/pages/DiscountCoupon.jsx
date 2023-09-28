@@ -1,6 +1,7 @@
 import React from 'react'
 import DiscountCouponTable from '../components/marketing-promotion/coupon/DiscountCouponTable'
 import Breadcrumb from '../components/common/breadcrumb/Breadcrumb'
+import Pagination from '../components/pagination/Pagination'
 
 const DiscountCoupon = () => {
   return (
@@ -11,6 +12,7 @@ const DiscountCoupon = () => {
      <div className="card">
      <div className="card-body">
         <DiscountCouponTable />
+        <Pagination />
          </div>
          </div>
        </div>

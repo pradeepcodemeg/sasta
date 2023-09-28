@@ -41,7 +41,7 @@ import EnquiryForm from './pages/EnquiryForm';
 import Banner from './pages/Banner';
 import AddBanner from './pages/AddBanner';
 import EditBanner from './pages/EditBanner';
-import Pages from './pages/Pages';
+import Page from './pages/page';
 import AddPage from './pages/AddPage';
 import EditPage from './pages/EditPage';
 import Faq from './pages/Faq';
@@ -55,6 +55,20 @@ import DeliverySlotSeting from './pages/DeliverySlotSeting';
 import DeliveryAreas from './pages/DeliveryAreas';
 import SocialMediaManagement from './pages/SocialMediaManagement';
 import FeatureSettings from './pages/FeatureSettings';
+import UserDetailHistory from './pages/UserDetailHistory';
+import ProfileUpdate from './pages/ProfileUpdate';
+import Brand from './pages/Brand';
+import UserGrup from './pages/UserGrup';
+import AddGroup from './pages/AddGroup';
+import EditGroup from './pages/EditGroup';
+import PushNotification from './pages/PushNotification';
+import PushNotificationList from './pages/PushNotificationList';
+import Vendor from './pages/Vendor';
+import VendorDetail from './pages/VendorDetail';
+import EditVendor from './pages/EditVendor';
+import AddVendor from './pages/AddVendor';
+import CreditList from './pages/CreditList';
+import OverallCreditSummary from './pages/OverallCreditSummary';
 
 
 function App() {
@@ -71,11 +85,22 @@ function App() {
           <Routes>
               <Route index element={<Home />} />
               <Route path="/user" element={<UserList />} />
+              <Route path="/group" element={<UserGrup />} />
+              <Route path="/add-group" element={<AddGroup />} />
+              <Route path="/edit-group" element={<EditGroup />} />
+              <Route path="/user-detail" element={<UserDetailHistory />} />
+              <Route path="/push-notification" element={<PushNotification />} />
+              <Route path="/push-notification-list" element={<PushNotificationList />} />
+              <Route path="/vendor" element={<Vendor />} />
+              <Route path="/add-vendor" element={<AddVendor />} />
+              <Route path="/edit-vendor" element={<EditVendor />} />
+              <Route path="/vendor-detail" element={<VendorDetail />} />
               <Route path="/order-list" element={<OrderList />} />
               <Route path="/refund-order" element={<RefundOrderList />} />
               <Route path="/order-detail" element={<OrderDetail />} />
               <Route path="/category" element={<Category />} />
               <Route path="/sub-category" element={<SubCategory />} />
+              <Route path="/brand" element={<Brand />} />
               <Route path="/product" element={<Product />} />
               <Route path="/add-product" element={<AddProduct />} />
               <Route path="/edit-product" element={<EditProduct />} />
@@ -103,7 +128,7 @@ function App() {
               <Route path="/banner" element={<Banner />} />
               <Route path="/add-banner" element={<AddBanner />} />
               <Route path="/edit-banner" element={<EditBanner />} />
-              <Route path="/page" element={<Pages />} />
+              <Route path="/page" element={<Page />} />
               <Route path="/add-page" element={<AddPage />} />
               <Route path="/edit-page" element={<EditPage />} />
               <Route path="/faq" element={<Faq />} />
@@ -117,6 +142,9 @@ function App() {
               <Route path="/delivery-areas" element={<DeliveryAreas />} />
               <Route path="/social-media-management" element={<SocialMediaManagement />} />
               <Route path="/features-settings" element={<FeatureSettings />} />
+              <Route path="/profile-update" element={<ProfileUpdate />} />
+              <Route path="/credit-points" element={<CreditList />} />
+              <Route path="/overall-credit-summary" element={<OverallCreditSummary />} />
           </Routes>
           <Footer />
         </div>
