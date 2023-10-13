@@ -40,7 +40,7 @@ import EnquiryForm from './pages/EnquiryForm';
 import Banner from './pages/Banner';
 import AddBanner from './pages/AddBanner';
 import EditBanner from './pages/EditBanner';
-import Page from './pages/page';
+// import Page from './pages/page';
 import AddPage from './pages/AddPage';
 import EditPage from './pages/EditPage';
 import Faq from './pages/Faq';
@@ -127,7 +127,7 @@ function App() {
               <Route path="/banner" element={<Banner />} />
               <Route path="/add-banner" element={<AddBanner />} />
               <Route path="/edit-banner" element={<EditBanner />} />
-              <Route path="/page" element={<Page />} />
+              {/* <Route path="/page" element={<Page />} /> */}
               <Route path="/add-page" element={<AddPage />} />
               <Route path="/edit-page" element={<EditPage />} />
               <Route path="/faq" element={<Faq />} />
