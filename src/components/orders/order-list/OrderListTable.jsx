@@ -1,137 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Select from 'react-select'
 import SelectBoxTwo from '../../formtools/SelectBoxTwo';
 import { OrderRejectionForm } from './OrderRejectionForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOrderLists } from '../../../store/slices/Order';
 
-const orders = [
-  {
-    orderId: 1623,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderstatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1624,
-    customerName: 'John Doe',
-    refundStaus: 'Refunded',
-    totalAmount: '480',
-    PaymentMode: 'COD',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1625,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1626,
-    customerName: 'John Doe',
-    refundStaus: 'Refunded',
-    totalAmount: '480',
-    PaymentMode: 'COD',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1627,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1628,
-    customerName: 'John Doe',
-    refundStaus: 'Refunded',
-    totalAmount: '480',
-    PaymentMode: 'COD',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1629,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1630,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1631,
-    customerName: 'John Doe',
-    refundStaus: 'Refunded',
-    totalAmount: '480',
-    PaymentMode: 'COD',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  },
-  {
-    orderId: 1632,
-    customerName: 'John Doe',
-    refundStaus: 'Refund Pending',
-    totalAmount: '480',
-    PaymentMode: 'Online',
-    orderRecevied: '2023-06-07 12:30 PM',
-    deliveryTimeSlot: '2023-06-07 12:30 PM',
-    contactNumber: '123-456-7890',
-    orderStatus: 'Delivered',
-    DeliveryTimeSlot: '10:00 AM -7:00 PM',
-  }
-];
+
 
 const tabelHeading = [
-  "#", "Order ID", "Customer Name", " Contact No.", "Address", "TOTAL(₹)", "Order Received", "Delivery Time Slot", "Order Status", "Runners", "Runners Order Status", "Payment Status", "Action"
+  "#", "Order ID", "Customer Name", " Contact No.", "Address", "TOTAL(₹)", "Order Received", "Delivery Time Slot", "Order Status","Change Order Status Action", "Runners", "Runners Order Status", "Payment Status", "Action"
 ]
-
 
 const optionsStatus = [
   { value: 'Due', label: 'Due' },
@@ -158,7 +38,7 @@ const optionsThi = [
 ];
 
 
-const OrderListTable = () => {
+const OrderListTable = ({data}) => {
 
   const [orderStatus, setOrderStatus] = useState({ value: 'Select Order Status', label: 'Select Order Status' })
   const [runner, setRunner] = useState({ value: 'Select Runner', label: 'Select Runner' })
@@ -177,20 +57,27 @@ const OrderListTable = () => {
             </tr>
           </thead>
           <tbody className=''>
-            {orders && orders.map((item, index) => {
+            {data && 
+            <>
+            {data.map((item, index) => {
               return (
                 <tr key={item.orderId} className="">
                   <td className="">{index + 1}</td>
-                  <td className="">{item.orderId}</td>
-                  <td className="">{item.customerName}</td>
-                  <td className="">{item.contactNumber}</td>
-                  <td className="">{item.Address}</td>
+                  <td className="">{item.id}</td>
+                  <td className="">{item.userFullname}</td>
+                  <td className="">{item.userMobile}</td>
+                  <td className="">
+                 {item.delivery_address && item.delivery_address[0] && item.delivery_address[0].area
+                  ? item.delivery_address[0].area.slice(0, 25) + "..."
+                  : "N/A"}
+                  </td>
                   <td className="">{item.totalAmount}</td>
-                  <td className="">{item.orderRecevied}</td>
-                  <td className="">{item.DeliveryTimeSlot}</td>
+                  <td className="">{item.date_time}</td>
+                  <td className="">{item.delivery_slot_id === '0' ? '9AM TO 7PM' : '7AM T0 10PM'}</td>
+                  <td className="">{item.status}</td>
                   <td className="">
                   <div className='ordrstats-slectbx'  style={{whiteSpace:'nowrap'}}>
-                    <SelectBoxTwo options={optionsStatus} newStatus={orderStatus} setNewStatus={setOrderStatus} />
+                    <SelectBoxTwo options={optionsStatus} newStatus={item.status} setNewStatus={setOrderStatus} />
                     </div>
                   </td>
                   <td className="">
@@ -224,6 +111,9 @@ const OrderListTable = () => {
                 </tr>
               )
             })}
+            </>
+            }
+            
           </tbody>
         </table>
       </div>

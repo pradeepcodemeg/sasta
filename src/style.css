@@ -1,3 +1,7 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
 @font-face {
     font-family: 'DM-Sans';
     src: url('../src/assets/fonts/DMSans-Regular.eot');
@@ -850,7 +854,13 @@ width: 70px;
     left: 3px;
     transition: all 300ms;
 }
-
+.svcrd-togl .tgl-sld input[type="checkbox"]:not(:checked)~span {
+    background: #cbcbcb;
+}
+.svcrd-togl .tgl-sld input[type="checkbox"]:not(:checked)~span i{
+    background: #6a6a6a;
+    left: 3px;
+}
 .svcrd-togl .tgl-sld input[type="checkbox"]:checked~span {
     background: #9dc45a;
 }
@@ -2398,7 +2408,7 @@ header
 
 .paginations {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     padding-top: 20px;
     padding-bottom: 15px
 }
@@ -2446,6 +2456,10 @@ header
     color: #666666;
 }
 
+.shimmer{
+    height: 100vh;
+    background: #f9f9f9;
+}
 
 .login-btn {
     margin-top: 30px;
@@ -2626,3 +2640,67 @@ header
 .cursur-pointer:hover {
     color: #7d9e44;
 }
+
+.font-semibold{
+    font-weight: 500;
+}
+
+.hidden{
+    display: none;
+}
+.block{
+    display: block;
+}
+
+
+.responsive-table tbody tr.animated-row {
+    position:relative;
+    height: 68px;
+}
+.responsive-table tbody tr.animated-row:before, .responsive-table tbody tr.animated-row:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.responsive-table tbody tr.animated-row:before {
+    background: #dfdfdf;
+}
+.responsive-table tbody tr.animated-row:after{
+    /* animation: rowAnimation 0.5s ease infinite; */
+    /* background: red; */
+    -webkit-animation-duration: 2.2s;
+    animation-duration: 2.2s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: shimmer;
+    animation-name: shimmer;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    background: #ddd;
+    background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
+    background-size: 1200px 100%;
+}
+@-webkit-keyframes shimmer {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 100% 0;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1200px 0;
+    }
+    100% {
+        background-position: 1200px 0;
+    }
+}
+
+

@@ -1,43 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { fetchOrdersLength } from '../../store/slices/Order'
 
-const Pagination = () => {
+const Pagination = ({nextPage,prevPage}) => {
+  // const dispatch = useDispatch()
+  // useEffect(()=>{dispatch(fetchOrdersLength())},[])
+  
+  // const Orderlength = useSelector(state=>state.Order.orderlength)
+  // console.log('Orderlength')
+  // console.log(Orderlength)
   return (
     <>
     <div class="paginations">
   <ul>
-    <li class="button previous-page">
-      <Link to="/">
+    <li  class="button previous-page">
+      <Link onClick={prevPage}>
         <em>
           <i aria-hidden="true" class="fa fa-long-arrow-left"></i>
         </em>Prev </Link>
     </li>
-    <li class="active">
-      <a href="">1</a>
+    {/* {Array(paginationValue).fill(1).map((item,idx)=>{
+      return(
+        <>
+    <li key={idx} onClick={()=>{handlePagination(idx + 1)}} class={`p-2 ${paginationValue === idx + 1 ? 'active' : ''}`}>
+      {idx + 1}
     </li>
-    <li>
-      <a href="">2</a>
-    </li>
-    <li>
-      <a href="">3</a>
-    </li>
-    <li>
-      <a href="">4</a>
-    </li>
-    <li>
-      <a href="">5</a>
-    </li>
-    <li>
-      <a href="">6</a>
-    </li>
-    <li>
-      <a href="">...</a>
-    </li>
-    <li>
-      <a href="">20</a>
-    </li>
-    <li class="button next-page">
-      <Link to="/" >Next <em>
+        </>
+      )
+    })} */}
+    <li  onClick={nextPage} class="button next-page">
+      <Link >Next <em>
           <i aria-hidden="true" class="fa fa-long-arrow-right"></i>
         </em>
       </Link>

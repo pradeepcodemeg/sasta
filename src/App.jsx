@@ -9,7 +9,6 @@ import Breadcrumb from './components/common/breadcrumb/Breadcrumb';
 import OrderList from './pages/OrderList';
 import UserList from './pages/UserList';
 import OrderDetail from './pages/OrderDetail';
-
 import RefundOrderList from './pages/RefundOrderList';
 import { useEffect } from 'react';
 import Category from './pages/Category';
@@ -73,7 +72,7 @@ import OverallCreditSummary from './pages/OverallCreditSummary';
 
 function App() {
   const routes = useRoutes([
-    { path: '/login', element: <Login /> },
+    { path: '/login', element:  <Login /> },
     { path: '/signup', element: <Signup /> },
     {
       path: '/*',
@@ -88,7 +87,7 @@ function App() {
               <Route path="/group" element={<UserGrup />} />
               <Route path="/add-group" element={<AddGroup />} />
               <Route path="/edit-group" element={<EditGroup />} />
-              <Route path="/user-detail" element={<UserDetailHistory />} />
+              <Route path="/user-detail/:userId" element={<UserDetailHistory />} />
               <Route path="/push-notification" element={<PushNotification />} />
               <Route path="/push-notification-list" element={<PushNotificationList />} />
               <Route path="/vendor" element={<Vendor />} />

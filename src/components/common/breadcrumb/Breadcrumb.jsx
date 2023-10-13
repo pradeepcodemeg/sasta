@@ -11,6 +11,8 @@ import AddLoyaltyCouponForm from '../../loyalty-program/loyalty-coupons/AddLoyal
 import AddBrandForm from '../../manage-grocery/brand/AddBrandForm';
 import EditBrandForm from '../../manage-grocery/brand/EditBrandForm';
 import AddCreditForm from '../../financial/credit-points/AddCreditForm';
+import { mkConfig, generateCsv, download } from "export-to-csv";
+import { useSelector } from 'react-redux';
 
 
 function Breadcrumb({ data }) {
@@ -28,7 +30,14 @@ function Breadcrumb({ data }) {
   const location = useLocation();
   const route = location.pathname.split('/').filter(p => (p !== "" && p !== "sasta"))
 
-  // console.log(route)
+  const {pending,users,error} = useSelector(state=>state.users.userlist)
+  const exportUsers = () => {
+    if(users.length > 0){
+      const csvConfig = mkConfig({ useKeysAsHeaders: true });
+    const csv = generateCsv(csvConfig)(users);
+    download(csvConfig)(csv)
+    }
+  }
 
   return (
     <>
@@ -72,7 +81,7 @@ function Breadcrumb({ data }) {
                   <button onClick={()=>{setToggleUserModal(p=> !p)}} className='btn btn-shadow btn-primary'>Add New User</button>
                 </div>
                 <div className='brdcrmbbtn-inner'>
-                  <button className='btn btn-shadow btn-primary'>Export User</button>
+                  <button onClick={exportUsers} className='btn btn-shadow btn-primary'>Export User</button>
                 </div>
                 <div className='brdcrmbbtn-inner'>
                   <button onClick={()=>{setToggleImportUserModal(p=> !p)}} className='btn btn-shadow btn-primary'>Import User</button>

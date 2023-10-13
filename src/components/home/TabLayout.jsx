@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const TabLayout = () => {
   const [activeSwitch, setActiveSwitch] = useState('Due');
+  
   const switches = ['Due', 'Active', 'Shipped', 'Delivered'];
 
   const handleChangeSwitches = (switchName) => {
