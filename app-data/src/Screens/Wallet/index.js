@@ -8,12 +8,40 @@ import HeaderComp from '../../Components/HeaderComp';
 import Redeem from '../../assets/img/redeem.svg';
 import Frontaerrow from '../../assets/img/frontaerrow.svg';
 import Gpay from '../../assets/img/gpay.svg';
-
+import { useSelector, useDispatch } from 'react-redux';
+import ApiDataService from "../../services/Apiservice.service";
 
 
 const Wallet = ({ navigation, route }) => {
     const [custum, setcustum] = useState(false);
-    const [choosebtn, setchoosebtn] = useState('');
+    const [trans,translist]= useState([]);
+    const [amount, setamount] = useState('0');
+    console.log('a,ount=-------------',amount);
+    const usaerstate = useSelector((state) => state.UserReducer.userData);
+    const userToken = usaerstate ? usaerstate.userToken : null;
+    const WelletBalance = usaerstate.wallet_balance;
+    const userID = usaerstate ? usaerstate.userID : null;
+    const CrLimitBalance = 0;
+    const CrLeftBalance = 0;
+
+    useEffect(()=>{
+        getdatadata()
+    },[])
+    const getdatadata = () =>{
+      
+           
+        let url = 'transactions?order=DESC&order_by=id&row_count=10&page=1&token='+userToken+'&by_user_id='+userID;
+        console.log(url);
+        ApiDataService.Getapi(url).then(response => {
+            if(response.data.length > 0)
+            {
+                translist(response.data);
+            }
+        }).catch(e => {
+        });
+        
+    }
+
     const submitfun = () => {
 
     }
@@ -22,22 +50,21 @@ const Wallet = ({ navigation, route }) => {
             <HeaderComp text={'My Wallet'} navigation={navigation} type={'3'} />
             <View style={{ ...StylesGloble.container, paddingTop: hp('1%'), paddingLeft: 10, paddingRight: 10 }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* <ScrollView  nestedScrollEnabled={true} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:30}}> */}
                 <ImageBackground style={{ width: '100%', height: 220 }} source={imagePath.Balance}>
                     <View style={{ width: '100%', alignItems: "center" }}>
                         <Text style={{ fontSize: 12, marginTop: 60, fontWeight: "400", color: "#FFFFFF" }}>Main balance</Text>
-                        <Text style={{ fontSize: 25, marginTop: 5, fontWeight: "900", color: "#FFFFFF" }}>₹14,235.34</Text>
+                        <Text style={{ fontSize: 25, marginTop: 5, fontWeight: "900", color: "#FFFFFF" }}>₹{WelletBalance}</Text>
                     </View>
 
                     <View style={{ width: "100%", height: 1, backgroundColor: "#FFFFFF40", marginTop: 26 }}></View>
                     <View style={{ ...StylesGloble.oneline, marginTop: 5 }}>
                         <View style={{ width: "50%", alignItems: "center", justifyContent: "center", borderRightWidth: 1, borderRightColor: "#ffffff" }}>
                             <Text style={{ fontSize: 12, marginTop: 0, fontWeight: "400", color: "#FFFFFF" }}>Credit Left</Text>
-                            <Text style={{ fontSize: 15, marginTop: 2, fontWeight: "600", color: "#FFFFFF" }}>₹14,235.34</Text>
+                            <Text style={{ fontSize: 15, marginTop: 2, fontWeight: "600", color: "#FFFFFF" }}>₹{CrLeftBalance}</Text>
                         </View>
                         <View style={{ width: "50%", alignItems: "center", justifyContent: "center" }}>
                             <Text style={{ fontSize: 12, marginTop: 0, fontWeight: "400", color: "#FFFFFF" }}>Credit Limit</Text>
-                            <Text style={{ fontSize: 15, marginTop: 2, fontWeight: "600", color: "#FFFFFF" }}>₹30,235.34</Text>
+                            <Text style={{ fontSize: 15, marginTop: 2, fontWeight: "600", color: "#FFFFFF" }}>₹{CrLimitBalance}</Text>
                         </View>
                     </View>
                 </ImageBackground>
@@ -50,32 +77,35 @@ const Wallet = ({ navigation, route }) => {
                 </View>
                 <View style={{ width: "100%", height: 'auto', marginTop: 15, borderColor: "#C4C4C450", borderRadius: 8, borderWidth: 1 }}>
                     <View style={{ padding: 10 }}>
-                        {
-                            custum ?
+                        {/* {
+                            custum ? */}
                                 <TextInput
-                                    placeholder='₹1000'
+                                    value={amount}
+                                    keyboardType='numeric'
+                                    placeholder='Enter Money'
+                                    placeholderTextColor='grey'
+                                    onChangeText={name => setamount(name)}
                                     style={{width: "100%", backgroundColor: "#9DC45A10", borderRadius: 10, paddingVertical: 15,height:50,paddingLeft:20,color:"#000000"}}
-                                    placeholderTextColor='#000000'
                                 />
-                                :
+                                {/* :
                                 <View style={{ width: "100%", backgroundColor: "#9DC45A10", borderRadius: 10, paddingVertical: 15 }}>
                                 <Text style={{ fontSize: 16, marginLeft: 10, color: '#000000' }}>₹1000</Text>
                             </View>
-                            }
+                            } */}
                        
                         <View style={{ ...StylesGloble.oneline, marginTop: 15, }}>
-                            <TouchableOpacity onPress={()=>{ setchoosebtn('10')}} style={{ ...StylesGloble.outerborderwei,backgroundColor:choosebtn=='10'? '#9DC45A'  :"white", }}>
-                                <Text style={{ fontSize: 12, color:choosebtn=='10'?   "white" : '#000000', marginLeft: 5 }}>₹10</Text>
+                            <TouchableOpacity onPress={() => setamount('10')} style={{ ...StylesGloble.outerborderwei2,backgroundColor:amount==10 ? "#9DC45A" : "#ffffff" }}>
+                                <Text style={{ fontSize: 12, color: amount==10 ? "#ffffff" : "#000000", marginLeft: 5 }}>₹10</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>{ setchoosebtn('500')}}  style={{ ...StylesGloble.outerborderwei,backgroundColor:choosebtn=='500'? '#9DC45A'  :"white", marginLeft: 15 }}>
-                                <Text style={{ fontSize: 12, color:choosebtn=='500'?  "white" : '#000000', marginLeft: 5 }}>₹500</Text>
+                            <TouchableOpacity onPress={() => setamount('500')} style={{ ...StylesGloble.outerborderwei, marginLeft: 15 ,backgroundColor:amount==500 ? "#9DC45A" : "#ffffff" }}>
+                                <Text style={{ fontSize: 12, color: amount==500 ? "#ffffff" : "#000000", marginLeft: 5 }}>₹500</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>{ setchoosebtn('1000')}} style={{ ...StylesGloble.outerborderwei,backgroundColor:choosebtn=='1000'? '#9DC45A'  :"white", marginLeft: 15 }}>
-                                <Text style={{ fontSize: 12,  color:choosebtn=='1000'?  "white" : '#000000', marginLeft: 5 }}>₹1000</Text>
+                            <TouchableOpacity onPress={() => setamount('1000')} style={{ ...StylesGloble.outerborderwei, backgroundColor:amount==1000 ? "#9DC45A" : "#ffffff" , marginLeft: 15 }}>
+                                <Text style={{ fontSize: 12, color: amount==1000 ? "#ffffff" : "#000000", marginLeft: 5 }}>₹1000</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>{ setchoosebtn('Custom');setcustum(true)}} style={{ ...StylesGloble.outerborderwei, backgroundColor:choosebtn=='Custom'? '#9DC45A'  :"white", marginLeft: 15 }} >
-                                <Text style={{ fontSize: 12, color:choosebtn=='Custom'?  "white" : '#000000', marginLeft: 5 }}>Custom</Text>
-                            </TouchableOpacity>
+                            {/* <TouchableOpacity style={{ ...StylesGloble.outerborderwei, backgroundColor:custum? '#9DC45A'  :"white", marginLeft: 15 }} onPress={() => setcustum(true)}>
+                                <Text style={{ fontSize: 12, color: custum? '#ffffff'  :"#000000", marginLeft: 5 }}>Custum</Text>
+                            </TouchableOpacity> */}
                         </View>
                         <View style={{ marginTop: 25 }}>
                             <ButtonField label={'Top Up'} submitfun={submitfun} />
@@ -83,7 +113,7 @@ const Wallet = ({ navigation, route }) => {
                     </View>
                 </View>
 
-                <View style={{ ...StylesGloble.oneline, marginTop: 15, marginLeft: 5 }}>
+                {/* <View style={{ ...StylesGloble.oneline, marginTop: 15, marginLeft: 5 }}>
                     <View style={{ marginLeft: 5 }}>
                         <Text style={{ ...StylesGloble.listheading }}>Recent Activity</Text>
                     </View>
@@ -127,9 +157,9 @@ const Wallet = ({ navigation, route }) => {
                         <View style={{ alignItems: "flex-end", width: '20%', justifyContent: "center" }} >
                             <Text style={{ fontSize: 18, fontWeight: "600", color: "#000000" }}>₹500</Text>
                         </View>
-                    </View>
+                    </View> */}
                 </ScrollView>
-                {/* </ScrollView> */}
+                
             </View>
 
         </>

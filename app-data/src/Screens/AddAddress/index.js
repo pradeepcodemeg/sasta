@@ -33,10 +33,10 @@ const AddAddress = ({ navigation,route }) => {
     const selectaddresstate = useSelector((state) => state.SelectAddressReducer.data);
     const chooselat =selectaddresstate ? selectaddresstate.lat:'19.0760';
     const chooselng = selectaddresstate ? selectaddresstate.lng:'72.8777';
-    const phonenumber = usaerstate ? usaerstate.mobile : '';
-    const fullname = usaerstate ? usaerstate.fullname : '';
+    const phonenumber = usaerstate ? usaerstate.mobile : null;
+    const fullname = usaerstate ? usaerstate.fullname : null;
 
-    const current_add = selectaddresstate ? selectaddresstate.address : '';
+    const current_add = selectaddresstate ? selectaddresstate.address : null
 
     useEffect(() => {
         ref.current?.setAddressText(current_add)
@@ -305,7 +305,7 @@ const AddAddress = ({ navigation,route }) => {
             <View style={{position: "absolute", top: 100,zIndex:55,  right: "5%",width:'90%',height:'auto',backgroundColor:'#ffffff',borderRadius:10}}> 
                 <GooglePlacesAutocomplete
                     ref={ref}
-                    placeholder='Search address'
+                    placeholder='Search for area'
                     fetchDetails={true}
                     onPress={(data,details) => {
                         onPlaceSelected(data,details)

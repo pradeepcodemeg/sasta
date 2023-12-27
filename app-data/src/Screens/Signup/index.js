@@ -171,7 +171,7 @@ const Signup = ({ navigation, route }) => {
                 </View>
                 <View style={{ marginTop: hp('5%'), alignItems: "center", justifyContent: "center" }}>
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ ...StylesGloble.fontsmall }}>By continuing you you agree to our</Text>
+                        <Text style={{ ...StylesGloble.fontsmall }}>By continuing you agree to our</Text>
                         <View style={{ flexDirection: "row", marginTop: hp('1%') }}>
                             <TouchableOpacity onPress={()=>navigation.navigate('Aboutus',{pagetype:1})}>
                                 <Text style={{ ...StylesGloble.fontsmall, color: "#9DC45A" }}> Terms of Service</Text>

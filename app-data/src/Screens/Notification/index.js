@@ -16,16 +16,16 @@ const Notification = ({ navigation, route }) => {
             <HeaderComp text={'Notification'} navigation={navigation} type={'3'} />
             <View  style={{flexDirection:"row",width:"100%",height:100,elevation:5,backgroundColor:"#ededed" }}>
                 <View style={{width:"70%",justifyContent:"center",marginLeft:15}}>
-                    <Text style={{fontSize:15,marginTop:0,fontWeight:"400",color:"#9DC45A"}}>WhatsApp Messages</Text>
-                    <Text style={{fontSize:16,marginTop:2,fontWeight:"600",color:"#9DC45A"}}>Get updates from us on WhatsApp</Text>
+                    <Text style={{fontSize:15,marginTop:0,fontWeight:"400",color:"#9DC45A"}}>WhattsApp Messages</Text>
+                    <Text style={{fontSize:18,marginTop:2,fontWeight:"600",color:"#9DC45A"}}>Get update From us WhattsApp</Text>
                 </View>
                 <View style={{width:"30%",alignItems:"center",justifyContent:"center"}}>
                     <ToggleSwitch
                         isOn={toggel}
                         onColor="#9DC45A"
                         offColor="#dbe5c7"
-                        labelStyle={{ color: "black", fontWeight: "600" }}
-                        size='medium'
+                        labelStyle={{ color: "black", fontWeight: "900" }}
+                        size="large"
                         onToggle={(isOn) =>{ settoggle(!toggel);}}
                     />
                 </View>

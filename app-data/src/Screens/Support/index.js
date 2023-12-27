@@ -7,11 +7,10 @@ import { useSelector } from 'react-redux';
 import ApiDataService from "../../services/Apiservice.service";
 import { StylesGloble } from './../../helper/Globlecss';
 import HeaderComp from '../../Components/HeaderComp';
-import LoadingPage  from './../../helper/LoadingPage';
 
 const Support = ({ navigation,route }) => {
 
-    const [Loading,setLoading ]= useState(false);
+   
     const usaerstate = useSelector((state) => state.UserReducer.userData);
     const userID = usaerstate ? usaerstate.userID : null;
     const userToken = usaerstate ? usaerstate.userToken : null;
@@ -25,10 +24,9 @@ const Support = ({ navigation,route }) => {
     },[])
 
     const loadfun =()=>{
-        setLoading(true);
         let url = 'faqs?order=DESC&order_by=id&token='+userToken+'&row_count=10&page='+pageLoad;
         ApiDataService.Getapi(url).then(response => {
-            setLoading(false);
+            console.log('response------------',response.data);
             if(response.data.length > 0)
             {
                 setfaqlist(response.data);
@@ -38,7 +36,7 @@ const Support = ({ navigation,route }) => {
             }
            
         }).catch(e => {
-            setLoading(false);
+           
         });
     }
 
@@ -85,14 +83,8 @@ const Support = ({ navigation,route }) => {
     };
     return (
         <>
-            {
-                Loading&&
-                <View style={{position:"absolute",top:0,left:0,height:"100%",width:"115%",zIndex:999999}}>
-                    <LoadingPage/>
-                </View>
-            }
             <HeaderComp text={'Customer Support & FAQ'} navigation={navigation} type={'3'}/>
-            <View style={{position:"relative",padding:5,paddingBottom:35}}>
+            <View style={{position:"relative",padding:5,paddingBottom:65}}>
                 <View style={{paddingHorizontal:5,marginTop:10}}>
                 <Text  style={{fontSize:20,fontWeight:"600",color:"#000000",lineHeight:25}}>FAQ</Text>
                 </View>

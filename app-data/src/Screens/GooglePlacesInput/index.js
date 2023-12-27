@@ -4,17 +4,17 @@ import imagePath from './../../constants/imagePath';
 import Geolocation from '@react-native-community/geolocation';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAP_API } from "./../../services/Apiurl";
-
+import { useSelector,useDispatch} from 'react-redux';
 import Blackbackaerrow from '../../assets/img/blackbackaerrow.svg';
 import Geocoder from 'react-native-geocoding';
-import LoadingPage  from './../../helper/LoadingPage';
+import { setselectaddressData } from '../../Redux/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Homeadd from '../../assets/img/homeadd.svg';
 import { StylesGloble } from './../../helper/Globlecss';
-import ApiDataService from "./../../services/Apiservice.service";
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setselectaddressData,setaddressData } from '../../Redux/index';
+import Homeadd from '../../assets/img/homeadd.svg';
+import Officeadd from '../../assets/img/Officeadd.svg';
+import Otheradd from '../../assets/img/Otheradd.svg';
+import Hotaladd from '../../assets/img/Hotaladd.svg';
 
 
 Geocoder.init(GOOGLE_MAP_API, {language : "en"});
@@ -26,13 +26,8 @@ const GooglePlacesInput= ({ navigation, route }) => {
 
     const placesRef = useRef();
     const dispatch = useDispatch();
-    const usaerstate = useSelector((state) => state.UserReducer.userData);
-    const [Loading,setLoading ]= useState(false);
 
-    const userID = usaerstate ? usaerstate.userID : null;
-    const userToken = usaerstate ? usaerstate.userToken : null;
-    const usernumber = usaerstate ? usaerstate.mobile : null;
-    const [currentLongitude, setCurrentLongitude ]  = useState('');
+    const [ currentLongitude, setCurrentLongitude ]  = useState('');
     const [currentLatitude, setCurrentLatitude ] = useState('');
     const addressstate = useSelector((state) => state.AddressReducer);
     const addresslist = addressstate ?addressstate.data : null;
@@ -109,9 +104,10 @@ const GooglePlacesInput= ({ navigation, route }) => {
                         lat:position.coords.latitude,
                         lng:position.coords.longitude
                     }
+                    console.log(address);
                     AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
-                    addaddress(fulladdress,position.coords.latitude,position.coords.longitude)
-
+                    dispatch(setselectaddressData());
+                    navigation.goBack() 
                 })
                 .catch(error => console.warn(error));
             },
@@ -142,61 +138,25 @@ const GooglePlacesInput= ({ navigation, route }) => {
             lng:details.geometry.location.lng
         }
         AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
-        addaddress(fulladdress,details.geometry.location.lat,details.geometry.location.lng)
+        dispatch(setselectaddressData());
+        navigation.goBack()
     }
     const chooseaddressfun = (item) =>{
+        console.log("=>>>>>>>",item)
         let address = {
             title:item.type,
             address:item.address_line1,
             lat:item.latitude,
             lng:item.longitude
         }
+      
         AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
-        addaddress(item.address_line1,item.latitude,item.longitude)
-    }
-    const addaddress = (address,lat,lng) =>{
-        let body = {
-            action : "add_address",
-            user_id:userID,
-            state:"state",
-            city:"city",
-            landmark:'',
-            address_line1 : address,
-            address_line2 : '',
-            latitude:lat,
-            longitude:lng,
-            phone:usernumber,
-            type:'other'
-        }
-        setLoading(true);
-        let formData = new FormData();
-        for (let key in body) {
-            formData.append(key, body[key]);
-        }
-        ApiDataService.Uploadapi('user-addresses?token='+userToken,formData).then(response => {
-            setLoading(false);
-            if(response.data.status==1)
-            {
-                dispatch(setselectaddressData());
-                dispatch(setaddressData());
-                navigation.goBack()
-            }
-            else{
-                calltoastmessage(response.data.msg);
-            }
-        }).catch(e => {
-            console.log("error",e);
-        });
+        dispatch(setselectaddressData());
+        navigation.goBack()
     }
   
     return (
         <>
-            {
-                Loading&&
-                <View style={{position:"absolute",top:0,left:0,height:"100%",width:"115%",zIndex:999999}}>
-                    <LoadingPage/>
-                </View>
-            }
             <View style={{flexDirection:'row',width:"100%",backgroundColor:"#ffffff"}}>
                 <TouchableOpacity style={styles.crosshight} onPress={() => {
                     navigation.goBack() }}>
@@ -305,12 +265,24 @@ const GooglePlacesInput= ({ navigation, route }) => {
                                 (addresslist !=null)?(
                                     addresslist.map((item,index)=>
                                    
-                                        <View key={index} style={{...styles.norbox}}>
+                                        <View key={index} style={{...styles.norbox, backgroundColor: '#9DC45A10',}}>
                                             <TouchableOpacity onPress={()=>{ chooseaddressfun(item)}} style={{width:"20%",justifyContent:"center",alignItems:"center"}}>
-                                                <Homeadd width={47} height={47}  />
+                                            {
+                                                (item.type=='home')?(
+                                                    <Homeadd width={47} height={47}  />
+                                                ):(item.type=='office')?
+                                                (
+                                                    <Officeadd width={47} height={47}  />
+                                                ):(item.type=='hotal')?
+                                                (
+                                                    <Hotaladd width={47} height={47}  />
+                                                ):(
+                                                    <Otheradd width={47} height={47}  />
+                                                )
+                                            }
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={()=>{ chooseaddressfun(item)}}  style={{width:"40%",marginLeft:10,marginTop:0}}>
-                                                <Text style={{fontSize:16,fontWeight:"500",color:"#000000",textTransform: 'capitalize'}}>{item.type}</Text>
+                                                <Text style={{fontSize:16,fontWeight:"500",color:"#000000"}}>{item.type}</Text>
                                                 <Text style={{fontSize:12,fontWeight:"400",color:"#9D9D9D",marginTop:5,marginBottom:0}}>{item.address_line1}</Text>
                                             </TouchableOpacity>
                                            
@@ -375,7 +347,9 @@ const styles = StyleSheet.create({
     norbox: {
         backgroundColor:"#ffffff",
         marginTop:15,
-        
+        borderRadius:8,
+        borderColor:"#dfdfdfab",
+        borderWidth:2,
         padding:5,
         
         width:"96%",

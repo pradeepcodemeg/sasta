@@ -34,7 +34,7 @@ const HeaderComp = (props) => {
                     ) : (props.type == 3) ? (
                         <></>
                     ) : (
-                        <Blacksearch width={28} height={28} style={{ marginRight: 20 }} />
+                        <Blacksearch width={28} height={28} style={{ marginRight: 10 }} />
                     )
                 }
             </TouchableOpacity>

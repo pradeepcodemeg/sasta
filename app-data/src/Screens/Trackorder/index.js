@@ -23,11 +23,11 @@ const Trackorder = ({ navigation, route }) => {
                 <View style={{ ...StylesGloble.helptrachbtn, top: 20 }}>
                     <Helpicon width={74} height={29} />
                 </View>
-                <View style={{ flex: 1, marginTop: 15, alignItems: "center", position: "relative" }}>
+                <View style={{flex:1 , marginTop: hp('5%'), height: hp('55%'), alignItems: "center", position: "relative" }}>
                     <Text style={{ position: "absolute", top: 60, fontWeight: '500', fontSize: 20, color: '#000000' }}>Arriving in</Text>
                     <CircularProgress
                         value={30}
-                        radius={95}
+                        radius={hp('13%')}
                         titleFontSize={13}
                         progressValueStyle={{ fontWeight: '600', fontSize: 18, color: '#000000', marginTop: 25, marginBottom: -5 }}
                         activeStrokeColor={'#9DC45A'}
@@ -44,7 +44,7 @@ const Trackorder = ({ navigation, route }) => {
                     />
                 </View>
 
-                <View style={{ position: "absolute", bottom: 0, right: 0, width: wp('100%'), height: 450, backgroundColor: '#ffffff', borderTopStartRadius: 30, borderTopEndRadius: 30 }}>
+                <View style={{ flex:2,position: "absolute", bottom: 0, right: 0, width: wp('100%'), height: hp('55%'), backgroundColor: '#ffffff', borderTopStartRadius: 30, borderTopEndRadius: 30 }}>
                     <Text style={{ fontSize: 18, fontWeight: "600", marginTop: 15, marginLeft: 25, color: "#000000" }}>Delivery Status</Text>
                     <View style={{ height: 210 }}>
                         <Stepindicator />

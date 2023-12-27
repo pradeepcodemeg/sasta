@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 export default function UserStack() {
     return (
         <Stack.Navigator screenOptions={{headerShown: false}} >
-            <Stack.Screen name={navigationStrings.Home} component={Home}  options={{ gestureEnabled: false }} />
+            <Stack.Screen name={navigationStrings.Home} component={Home} />
             <Stack.Screen name={navigationStrings.Trackorder} component={Trackorder} />
             <Stack.Screen name={navigationStrings.Orderconfirm} component={Orderconfirm} />
             <Stack.Screen name={navigationStrings.Category} component={Category} />

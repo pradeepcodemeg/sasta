@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { View, Text,BackHandler,ScrollView, Modal, FlatList, Image, TouchableOpacity, ImageBackground, PermissionsAndroid, Dimensions } from 'react-native';
+import { View, Text, ScrollView, Modal, FlatList, Image, TouchableOpacity, ImageBackground, PermissionsAndroid, Dimensions } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import Toast from 'react-native-simple-toast';
+
 import imagePath from './../../constants/imagePath';
 import SearchField from './../../helper/SearchField';
 import Sliderdata from '../../helper/sliderdata';
@@ -24,7 +24,6 @@ import Carousel from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { setproductData, sethomeData, setsubcategoryData } from './../../Redux/index';
 import { getFormattedAddress, requestLocationPermission } from '"./../../services/LocationServices';
-import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -43,7 +42,6 @@ const Home = ({ navigation, route }) => {
     const [timesec, settimesec] = useState('');
     const [currentlat, setcurrentlat] = useState('');
     const [currentlng, setcurrentlng] = useState('');
-    const [backhandlerval, setbackhandlerval] = useState(true);
 
 
     const usaerstate = useSelector((state) => state.UserReducer.userData);
@@ -74,33 +72,21 @@ const Home = ({ navigation, route }) => {
     const Changevalue = (text) => {
         setsearch(text);
     }
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const onBackPress = () => {
-                return true;
-            };
-            BackHandler.addEventListener(
-                'hardwareBackPress',
-                onBackPress
-            );
-            return () => {
-                BackHandler.removeEventListener(
-                    'hardwareBackPress',
-                    onBackPress
-                );
-            };
-        }, []),
-    );
     useEffect(() => {
+       
+        // setTimeout(() => {
+        //     if(locationname==''){
+        //         navigation.navigate('GooglePlacesInput');
+        //         setskletonshow(2);
+        //     }
+           
+        // }, 5000)
         setTimeout(() => {
             setskletonshow(2);
            
         }, 3000)
     }, [])
-   
-
-   
+ 
     useEffect(() => {
         let date = new Date();
         let hours = date.getHours();

@@ -206,7 +206,7 @@ export const StylesGloble = StyleSheet.create({
         alignItems:"center",
         backgroundColor: '#fff',
         shadowColor: "#626464",
-        borderRadius:6,
+        borderRadius:15,
         elevation: 2,
         flex:1,
         position:"relative"

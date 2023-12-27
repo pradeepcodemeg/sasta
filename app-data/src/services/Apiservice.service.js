@@ -13,7 +13,6 @@ class ApiDataService {
     }
     Deleteapi(url) {
         let newurl = API_URL+url;
-        
         return http.delete(newurl);
     }
 

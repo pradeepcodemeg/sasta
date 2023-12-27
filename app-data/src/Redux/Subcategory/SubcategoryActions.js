@@ -8,7 +8,9 @@ export const setsubcategoryData = (id) => async (dispatch) => {
           AsyncStorage.getItem('UserBase', (err, credentials) => {
                let  UserBase =  JSON.parse(credentials);
                dispatch({ type:SET_SUBCATEGORY_DATA });
-               let url = 'categories?order=ASC&order_by=id&row_count=50&parent_id='+id+'&token='+UserBase.userToken;
+               let url = 'categories?order=DESC&order_by=id&row_count=50&parent_id='+id+'&token='+UserBase.userToken;
+               console.log("subcatdata__________",url);
+            
                ApiDataService.Getapi(url).then(response =>{
                     let data = response.data;
                     if(data.length > 0)

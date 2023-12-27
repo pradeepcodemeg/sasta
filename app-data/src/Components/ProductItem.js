@@ -70,8 +70,8 @@ const checkcartdatav = (Data) =>{
 
 const checkprice = (item) =>{
     var price  = 0;
-    if(item.feature_values != null){
-        price= item.feature_values[0].price;
+    if(item?.feature_values != null){
+        price= item?.feature_values[0]?.price;
     }
     return price;
 }
@@ -109,16 +109,17 @@ const ProductItem = ({item,navigation,prowdith}) => {
             let checkplz = 1;
             for(let j=0;j < CartData.length;j++){
                 if(CartData[j].ProductId==item.id){
-                   
                     if(CartData[j].Size==item.feature_values[0].id){
-                        let  makecartdata ={
-                            userId:CartData[j].userId,
-                            ProductId:CartData[j].ProductId,
-                            Size:CartData[j].Size,
-                            cartqty:quty
-                        } 
-                        newcartdata.push(makecartdata);
-                        checkplz = 2;
+                        if(quty > 0){
+                            let  makecartdata ={
+                                userId:CartData[j].userId,
+                                ProductId:CartData[j].ProductId,
+                                Size:CartData[j].Size,
+                                cartqty:quty
+                            } 
+                            newcartdata.push(makecartdata);
+                        }
+                            checkplz = 2;
                     }
                 }
                 else{
@@ -159,7 +160,7 @@ const ProductItem = ({item,navigation,prowdith}) => {
         dispatch(setcartData());
     }
     return (
-        <TouchableOpacity onPress={()=>{ gotoproductdetls(item)}} style={{...StylesGloble.productView,height:200,maxWidth:wp(prowdith)-10}} >
+        <TouchableOpacity onPress={()=>{ gotoproductdetls(item)}} style={{...StylesGloble.productView,height:220,maxWidth:wp(prowdith)}} >
             {
                 (item.image != '' || item.image != null)?(
                     <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={{uri :item.image}} />
@@ -167,9 +168,9 @@ const ProductItem = ({item,navigation,prowdith}) => {
                     <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={imagePath.meat} />                
                 ) 
             }
-            <View style={{...StylesGloble.productviewdata,}}>
+            <View style={{...StylesGloble.productviewdata}}>
                 <Text numberOfLines={2} style={{fontSize:13,fontWeight:"500",marginTop:5,color:"#000000",width:120}}>{item.name}</Text>
-                <Text numberOfLines={1} style={{...StylesGloble.fontsmallsimple,color:"#000000",marginTop:0,fontSize:10,width:120}}>{item.category_Name}</Text>
+                <Text numberOfLines={1} style={{...StylesGloble.fontsmallsimple,color:"#000000",marginBottom:10,fontSize:10,width:120}}>{item.category_Name}</Text>
                 <Text style={{fontSize:15,fontWeight:"600",marginTop:0,color:"#9DC45A"}}>₹{price}</Text>
             </View>
             {
@@ -178,12 +179,12 @@ const ProductItem = ({item,navigation,prowdith}) => {
                        <Text style={{fontSize:12,color:"#ffffff",fontWeight:"600"}}>ADD</Text>
                     </TouchableOpacity>
                 ):( 
-                    <View style={{...StylesGloble.oneline,position:"absolute",top:170,right:5}}>
-                        <TouchableOpacity onPress={()=>{ addremovefuncart('1',item,price)}} style={{marginLeft:2, zIndex:9999,elevation:2}}>
+                    <View style={{...StylesGloble.oneline,position:"absolute",top:176,right:0,padding:5,paddingBottom:10}}>
+                        <TouchableOpacity onPress={()=>{ addremovefuncart('1',item,price)}} style={{zIndex:9999,padding:8}}>
                             <Cartminus width={22} height={22}/>
                         </TouchableOpacity>
-                        <Text style={{fontSize:15,color:"#000000",marginLeft:0}}> {cartcount} </Text>
-                        <TouchableOpacity onPress={()=>{ addremovefuncart('2',item,price)}}  style={{marginLeft:2, zIndex:9999,elevation:2}}>
+                        <Text style={{fontSize:15,color:"#000000",marginLeft:-8,marginTop:8}}> {cartcount} </Text>
+                        <TouchableOpacity onPress={()=>{ addremovefuncart('2',item,price)}}  style={{ zIndex:9999,marginLeft:-8,padding:8}}>
                             <Cartplus width={22} height={22}/>
                         </TouchableOpacity>
                     </View>

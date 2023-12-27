@@ -17,7 +17,6 @@ const Payment = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const [Loading, setLoading] = useState(false);
     const [allOrderdata, setallOrderdata] = useState({});
-    const [totalamt, settotalamt] = useState('');
 
     const usaerstate = useSelector((state) => state.UserReducer.userData);
     const userID = usaerstate ? usaerstate.userID : null;
@@ -26,9 +25,7 @@ const Payment = ({ navigation, route }) => {
     useEffect(() => {
         AsyncStorage.getItem('Paymentdata', (err, credentials) => {
             let UserBase = JSON.parse(credentials);
-            console.log("UserBase__________",UserBase);
             setallOrderdata(UserBase);
-            settotalamt(UserBase.actual_price)
         })
 
     }, [])
@@ -64,54 +61,17 @@ const Payment = ({ navigation, route }) => {
                 </View>
             }
             <View style={{ width: wp('100%'), height: hp('100%'), backgroundColor: '#ffffff', borderTopStartRadius: 10, borderTopEndRadius: 10, alignItems: "center" }}>
-                <ScrollView contentContainerStyle={{paddingBottom: 200 }}>
-                    <View style={{ flexDirection: "row",marginTop: 15}}>
+
+                <ScrollView style={{ marginTop: 15, marginBottom: 15 }}>
+                    <View style={{ flexDirection: "row" }}>
                         <Text style={{ color: "black", fontSize: 18, fontWeight: "600" }}>
                             Bill Total :
                         </Text>
                         <Text style={{ color: "black", fontSize: 18, fontWeight: "700", marginLeft: 5 }}>
-                            ₹{totalamt}
+                            ₹1000
                         </Text>
                     </View>
-                    <View style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
-                        <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
-                            <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Credit amount</Text>
-                        </View>
-                        <View style={{ ...StylesGloble.oneline, marginTop: 20, marginLeft: 15 }}>
-                            <View style={{ width: "20%", alignSelf: "center" }}>
-                                <Image source={imagePath.Cashondel} />
-                            </View>
-                            <View style={{ width: "70%", alignSelf: "center" }}>
-                                <Text style={{ fontSize: 14, fontWeight: "500", color: "#000000", }}>Use Credit amount</Text>
-                                <Text style={{ color: "black", fontSize: 14, fontWeight: "500" }}>
-                                    ₹0
-                                </Text>
-                            </View>
-                            <View style={{ width: "10%", justifyContent: "center", alignContent: "center" }}>
-                                <Forwordcou width={15} height={30} fill={"green"} />
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
-                        <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
-                            <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Wallets</Text>
-                        </View>
-                        <View style={{ ...StylesGloble.oneline, marginTop: 20, marginLeft: 15 }}>
-                            <View style={{ width: "20%", alignSelf: "center" }}>
-                                <Image source={imagePath.Cashondel} />
-                            </View>
-                            <View style={{ width: "70%", alignSelf: "center" }}>
-                                <Text style={{ fontSize: 14, fontWeight: "500", color: "#000000", }}>Use Wallets amount</Text>
-                                <Text style={{ color: "black", fontSize: 14, fontWeight: "500" }}>
-                                    ₹0
-                                </Text>
-                            </View>
-                            <View style={{ width: "10%", justifyContent: "center", alignContent: "center" }}>
-                                <Forwordcou width={15} height={30} fill={"green"} />
-                            </View>
-                        </View>
-                    </View>
-                    <TouchableOpacity onPress={() => submitfunto() } style={{ width: wp('100%') - 50, height: 170, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
+                    <TouchableOpacity onPress={() => { submitfunto() }} style={{ width: wp('100%') - 50, height: 170, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
                         <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
                             <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Online Payment</Text>
                         </View>
@@ -138,7 +98,46 @@ const Payment = ({ navigation, route }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() =>  submitfunto() } style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
+
+                    <View style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
+                        <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
+                            <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Wallets</Text>
+                        </View>
+                        <View style={{ ...StylesGloble.oneline, marginTop: 20, marginLeft: 15 }}>
+                            <View style={{ width: "20%", alignSelf: "center" }}>
+                                <Image source={imagePath.Cashondel} />
+                            </View>
+                            <View style={{ width: "70%", alignSelf: "center" }}>
+                                <Text style={{ fontSize: 14, fontWeight: "500", color: "#000000", }}>Use Wallets amount</Text>
+                                <Text style={{ color: "black", fontSize: 14, fontWeight: "500" }}>
+                                    ₹1000
+                                </Text>
+                            </View>
+                            <View style={{ width: "10%", justifyContent: "center", alignContent: "center" }}>
+                                <Forwordcou width={15} height={30} fill={"green"} />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
+                        <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
+                            <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Credit amount</Text>
+                        </View>
+                        <View style={{ ...StylesGloble.oneline, marginTop: 20, marginLeft: 15 }}>
+                            <View style={{ width: "20%", alignSelf: "center" }}>
+                                <Image source={imagePath.Cashondel} />
+                            </View>
+                            <View style={{ width: "70%", alignSelf: "center" }}>
+                                <Text style={{ fontSize: 14, fontWeight: "500", color: "#000000", }}>Use Credit amount</Text>
+                                <Text style={{ color: "black", fontSize: 14, fontWeight: "500" }}>
+                                    ₹1000
+                                </Text>
+                            </View>
+                            <View style={{ width: "10%", justifyContent: "center", alignContent: "center" }}>
+                                <Forwordcou width={15} height={30} fill={"green"} />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ width: wp('100%') - 50, height: 130, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>
                         <View style={{ ...StylesGloble.oneline, marginTop: 10 }}>
                             <Text style={{ fontSize: 17, fontWeight: "600", marginLeft: 10, marginTop: 10, color: "#000000" }}>Pay on delivery</Text>
                         </View>
@@ -153,7 +152,7 @@ const Payment = ({ navigation, route }) => {
                                 <Forwordcou width={15} height={30} fill={"green"} />
                             </View>
                         </View>
-                    </TouchableOpacity>
+                    </View>
                 </ScrollView>
             </View>
 

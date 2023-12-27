@@ -151,7 +151,7 @@ const SubCategory = ({ navigation, route }) => {
             }
             
             <View style={{ flexDirection: "row", width: "100%" }}>
-                <View style={{ backgroundColor: "#ffffff", width: wp('20.5%'),height:"100%", marginBottom: 30, paddingBottom: 120 }}>
+                <View style={{ backgroundColor: "#ffffff", width: wp('20%'),height:"100%", marginBottom: 30, paddingBottom: 120 }}>
                     {
                         (Subcategorieslist || Subcategorieslist!=null)&&(
                             <FlatList
@@ -164,7 +164,7 @@ const SubCategory = ({ navigation, route }) => {
                     }
                 </View>
 
-                <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 2, width: wp('80%'), marginBottom: 30, paddingBottom: 75,paddingTop:3 }}>
+                <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: hp('1%'), width: wp('80%'), marginBottom: 30, paddingBottom: 75,paddingTop:5 }}>
                     {
                         (productlistre)&&(
                             <FlatList
@@ -172,7 +172,7 @@ const SubCategory = ({ navigation, route }) => {
                                 data={productlistre}
                                 showsHorizontalScrollIndicator={false}
                                 showsVerticalScrollIndicator={false}
-                                renderItem={({ item }) => <ProductItem prowdith={'38.5%'} item={item} navigation={navigation} />}
+                                renderItem={({ item }) => <ProductItem prowdith={'40%'} item={item} navigation={navigation} />}
                                 keyExtractor={(item, index) => index}
                             />
                         )
@@ -191,45 +191,49 @@ const SubcatItem = ({ item,checkid, changvaluefun }) => (
         {
             (item.id ==checkid) ? (
                 <TouchableOpacity style={{
-                    marginTop: 10,
-                    marginBottom: -10,
-                    height: 100,
-                    width:100
+                    marginTop: 20,
+                    marginBottom: 10,
+                    height: 80,
+                    width:"100%",
                   
                 }} >
-                    <View style={{ backgroundColor: "#9DC45A", width: '70%', borderTopRightRadius:30 ,borderBottomRightRadius:30 ,padding: 3 }}>
-                        <View style={{ backgroundColor: '#e2e9d3', padding: 3, borderRadius: 50,marginLeft:10 }}>
+                    <View style={{ backgroundColor: "#9DC45A", width: '90%', borderTopRightRadius:30 ,borderBottomRightRadius:30 ,padding: 3 }}>
+                        <View style={{ backgroundColor: '#e2e9d3', padding: 3, borderRadius: 40,marginLeft:10 }}>
                             <Image style={{  width:50,height:50, alignSelf: "center",borderRadius: 50, justifyContent: "center", }} source={{uri :item.image}} />
                         </View>
                     </View>
-                    <View style={{ alignSelf: "center",justifyContent: "center",width:60,marginLeft:-10 }}>
+
+
+                    <View style={{ alignSelf: "center", marginTop: 2, paddingLeft: 3, paddingRight: 3 }}>
                         <Text style={{
-                            fontSize: 10, lineHeight: 15,
-                            fontWeight: "400",
-                            color: "#9DC45A", alignSelf: "center",justifyContent: "center",
+                            fontSize: 12, lineHeight: 15,
+                            fontWeight: "600",
+                            color: '#9DC45A'
                         }} numberOfLines={2} >{item.name}</Text>
                     </View>
 
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity onPress={() => { changvaluefun(item.id) }} style={{
-                    marginTop: 10,
-                    marginBottom: -10,
-                    height: 100,
-                    width:100,
+                    marginTop: 20,
+                    marginBottom: 10,
+                    height: 80,
+                    width:"100%",
                 }} >
-                    <View style={{ backgroundColor: "#FFFFFF", width: '73%', borderTopRightRadius:30 ,borderBottomRightRadius:30 ,padding: 3 }}>
+                    <View style={{ backgroundColor: "#FFFFFF", width: '90%', borderTopRightRadius:30 ,borderBottomRightRadius:30 ,padding: 3 }}>
                         <View style={{ backgroundColor: '#e2e9d3', padding: 3, borderRadius: 50,marginLeft:10 }}>
                             <Image style={{  width:50,height:50, alignSelf: "center",borderRadius: 50, justifyContent: "center", }} source={{uri :item.image}} />
                         </View>
                     </View>
-                    <View style={{ alignSelf: "center",justifyContent: "center",width:60,marginLeft:-10 }}>
+                   
+
+                    <View style={{ alignSelf: "center", marginTop: 2, paddingLeft: 3, paddingRight: 3 }}>
                         <Text style={{
-                            fontSize: 10, lineHeight: 15,
-                            fontWeight: "400",
-                            color: "#000000", alignSelf: "center",justifyContent: "center",
-                        }} numberOfLines={2} >{item.name}</Text>
+                            color: "#000000", fontSize: 12, lineHeight: 15,
+                            fontWeight: "600",
+                        }} numberOfLines={2}>{item.name}</Text>
                     </View>
+
                 </TouchableOpacity>
             )
         }

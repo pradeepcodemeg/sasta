@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
 import { View, Text, ScrollView, StyleSheet, Modal, FlatList, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
@@ -12,6 +12,7 @@ import Couponicon from '../../assets/img/couponicon.svg';
 import Forwordcou from '../../assets/img/forwordcou.svg';
 import Cartminus from '../../assets/img/cartminus.svg';
 import Cartplus from '../../assets/img/cartplus.svg';
+import Crossred from '../../assets/img/Crossred.svg';
 import EmptyBag from '../../assets/img/emptyBag.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import { setcartData, setproductData, setorderData } from './../../Redux/index';
@@ -108,6 +109,8 @@ const Cartscreen = ({ navigation, route }) => {
     const [cartalldata, setcartalldata] = useState('');
     const [suggestdata, setsuggestdata] = useState('');
 
+    const [runcartvalue,setruncartvalue]=useState(1);
+
     const [cartsavedata, setcartsavedata] = useState('');
     const [couponPopup, setcouponPopup] = useState(false);
     const [couponlist, setcouponlist] = useState([]);
@@ -133,7 +136,7 @@ const Cartscreen = ({ navigation, route }) => {
     const [carttotalPrice, setcarttotalPrice] = useState(0);
     const [totalPrice, settotalPrice] = useState(0);
 
-    const [delivertype, setdelivertype] = useState([]);
+    const [delivertype, setdelivertype] = useState(-1);
     const [taxvalue, settaxvalue] = useState(0);
     const [nodata, setnodata] = useState(0);
     const [skletonshow, setskletonshow] = useState(1);
@@ -270,7 +273,9 @@ const Cartscreen = ({ navigation, route }) => {
                     let cartdata = checkcartvalue(cartdatafu, alldata[i]);
                     makedatalist.push(cartdata)
                 }
-                setcartalldata(makedatalist);
+                if(makedatalist.length != cartalldata.length){
+                    setcartalldata(makedatalist);
+                }
                 var totalamount = 0;
                 var Deliveryfees = 0;
                 var feedDonation = 0;
@@ -387,78 +392,64 @@ const Cartscreen = ({ navigation, route }) => {
         }
 
     }
-    const addremovefuncart = (type, item) => {
-        let productId = item.ProductId;
+    const addremovefuncart = (type, itemnew) => {
+       
+        
+        let productId = itemnew.ProductId;
         let totalamount = 0;
-        let qty = item.qty;
-        let Newprolist = [];
+        let qty = itemnew.qty;
+        
         if (type == '1') {
             qty = qty - 1;
         }
         else {
             qty = qty + 1;
         }
-        for (let j = 0; j < cartalldata.length; j++) {
-
-            if (cartalldata[j].ProductId == productId) {
-                if (qty > 0) {
-                    let totalPrice = Number(qty) * Number(cartalldata[j].price);
+        let Newprolist = cartalldata.filter((item,index)=>{
+            if(item.ProductId == productId){
+                if(qty > 0){
+                    let totalPrice = Number(qty) * Number(item.price);
                     let proqrt = qty;
-                    var value = {
-                        userId: cartalldata[j].userID,
-                        ProductId: cartalldata[j].ProductId,
-                        size: cartalldata[j].size,
-                        qty: proqrt,
-                        price: cartalldata[j].price,
-                        totalPrice: totalPrice,
-                        name: cartalldata[j].name,
-                        image: cartalldata[j].image,
-                        stock: cartalldata[j].min_stock_alert
+                    item.totalPrice=totalPrice;
+                    item.qty=proqrt;
+                    totalamount = totalamount + Number(item.totalPrice)
+                    return item;
+                }
+
+            }else{
+                totalamount = totalamount + Number(item.totalPrice)
+                return item;
+            }
+        }); 
+        if(Newprolist.length > 0){
+            setcartalldata(Newprolist);
+            setcarttotalPrice(totalamount);
+            let newcartdata = [];
+            for (let j = 0; j < Newprolist.length; j++) {
+                if (Newprolist[j].qty > 0) {
+                    let makecartdata = {
+                        userId: Newprolist[j].userId,
+                        ProductId: Newprolist[j].ProductId,
+                        Size: Newprolist[j].size,
+                        cartqty: Newprolist[j].qty
                     }
-                    Newprolist.push(value)
+                    newcartdata.push(makecartdata);
                 }
-
             }
-            else {
-                let proqrt = cartalldata[j].qty;
-                let totalPrice = Number(cartalldata[j].qty) * Number(cartalldata[j].price);
-                var value = {
-                    userId: cartalldata[j].userID,
-                    ProductId: cartalldata[j].ProductId,
-                    size: cartalldata[j].size,
-                    qty: proqrt,
-                    price: cartalldata[j].price,
-                    totalPrice: totalPrice,
-                    name: cartalldata[j].name,
-                    image: cartalldata[j].image,
-                    stock: cartalldata[j].min_stock_alert
-                }
-                Newprolist.push(value)
-            }
-
+            AsyncStorage.setItem('Cartdata', JSON.stringify(newcartdata));
+          
         }
-        setcartalldata(Newprolist);
-        for (let j = 0; j < Newprolist.length; j++) {
-            totalamount = totalamount + Number(Newprolist[j].totalPrice)
+        
+        if(runcartvalue==1){
+            setruncartvalue(2);
+            setTimeout(()=>{
+                setruncartvalue(1);
+                gettotalamountcal(totalamount, handlecrgamt, deliveryfees, donetionfees, coustmdprt, smallChargesfees, couponamt,taxvalue);
+                callsuggestfun(bestDealslist[0].id);
+                dispatch(setcartData());
+            },3000)
         }
-        setcarttotalPrice(totalamount);
-        let newcartdata = [];
-        for (let j = 0; j < Newprolist.length; j++) {
-            if (Newprolist[j].qty > 0) {
-                let makecartdata = {
-                    userId: Newprolist[j].userId,
-                    ProductId: Newprolist[j].ProductId,
-                    Size: Newprolist[j].size,
-                    cartqty: Newprolist[j].qty
-                }
-                newcartdata.push(makecartdata);
-            }
-
-        }
-        AsyncStorage.setItem('Cartdata', JSON.stringify(newcartdata));
-        gettotalamountcal(totalamount, handlecrgamt, deliveryfees, donetionfees, coustmdprt, smallChargesfees, couponamt,taxvalue);
-        callsuggestfun(bestDealslist[0].id);
-        dispatch(setcartData());
+       
     }
     const gotoProductlistfun = (type) => {
         dispatch(setproductData('', '', type, '', '', ''));
@@ -492,27 +483,17 @@ const Cartscreen = ({ navigation, route }) => {
 
     }
     const choosedeliveryoption = (item) => {
-        let newarry = delivertype;
-        let checkdata =  newarry.findIndex(value => { return value == item.id });
-        if(checkdata != -1){
-            newarry.splice(checkdata,1);
-            setdelivertype(newarry);
-            let newdata = [...deliverins];
-            setdeliverins(newdata)
+        if(item.id==delivertype){
+            setdelivertype('')
+
+        }else{
+            setdelivertype(item.id)
         }
-        else{
-            setdelivertype([...newarry,item.id])
-        }
-        
     }
     const removedonationfeesfun = ()=>{
         setdonetionfees(0);
         calltoastmessage("Feeding India donation has been removed from your order");
         gettotalamountcal(carttotalPrice, handlecrgamt, deliveryfees, 0, deliveryprt, smallChargesfees, couponamt,taxvalue);
-    }
-    const checkdeliverytype = (id)=>{
-        console.log('may call ho raha hu_____________',id)
-        return delivertype.includes(id);
     }
 
     return (
@@ -705,8 +686,8 @@ const Cartscreen = ({ navigation, route }) => {
                                             <TouchableOpacity onPress={() => { setdeliveryprt(coustmdprt); gettotalamountcal(carttotalPrice, handlecrgamt, deliveryfees, donetionfees, coustmdprt, smallChargesfees, couponamt,taxvalue); }} style={{ width: 85, height: 35, borderRadius: 25, alignItems: "center", justifyContent: "center", borderColor: "#9DC45A", borderWidth: 2, marginTop: 15 }}>
                                                 <Text style={{ fontSize: 15, color: "#9DC45A", paddingBottom: 0 }}>Submit</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={{alignSelf: 'center', marginLeft: '100%'}} onPress={()=>setcoustmpop(0)}>
-                                                <Image source={imagePath.cross} style={{ width: 15, height: 15, tintColor: "red"}} />
+                                            <TouchableOpacity style={{alignSelf: 'center', marginLeft: wp('40%'),marginTop:5}} onPress={()=>setcoustmpop(0)}>
+                                                <Crossred width={18} height={18} />
                                             </TouchableOpacity>
 
                                         </View>
@@ -716,7 +697,7 @@ const Cartscreen = ({ navigation, route }) => {
                                     <Text style={{ ...StylesGloble.listheading }}>Bill Details</Text>
                                     <View style={{ ...StylesGloble.oneline, marginTop: 15 }}>
                                         <View>
-                                            <Text style={{ fontSize: 14, fontWeight: "500", marginTop: 0, color: "#000000" }}>Item total (incl taxes)</Text>
+                                            <Text style={{ fontSize: 14, fontWeight: "500", marginTop: 0, color: "#000000" }}>Item total (incl.taxes)</Text>
                                         </View>
                                         <View style={{ ...StylesGloble.oneline, marginLeft: "auto" }}>
                                             <Text style={{ fontSize: 14, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
@@ -724,8 +705,9 @@ const Cartscreen = ({ navigation, route }) => {
                                         </View>
                                     </View>
                                     <View style={{ ...StylesGloble.oneline, marginTop: 12 }}>
-                                        <View>
-                                            <Text style={{ fontSize: 14, fontWeight: "500", marginTop: 0, color: "#c7c7c7" }}>Handling Charge(Max, real)</Text>
+                                        <View style={{flexDirection:"row"}}>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", marginTop: 0, color: "#c7c7c7" }}>Handling Charge</Text>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", marginTop: 0, color: "#9DC45A" }}> (0 Saved)</Text>
                                         </View>
                                         <View style={{ ...StylesGloble.oneline, marginLeft: "auto" }}>
                                             <Text style={{ fontSize: 14, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
@@ -733,22 +715,23 @@ const Cartscreen = ({ navigation, route }) => {
                                         </View>
                                     </View>
                                     <View style={{ ...StylesGloble.oneline, marginTop: 12 }}>
-                                        <View>
-                                            <Text style={{ fontSize: 14, fontWeight: "500", marginTop: 0, color: "#c7c7c7" }}>Delivery Fee(Max, real)</Text>
+                                        <View style={{flexDirection:"row"}}>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", marginTop: 0, color: "#c7c7c7" }}>Delivery Fee</Text>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", marginTop: 0, color: "#9DC45A" }}> (0 Saved)</Text>
                                         </View>
+                                        
                                         <View style={{ ...StylesGloble.oneline, marginLeft: "auto" }}>
-                                            <Text style={{ fontSize: 14, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
                                             <Text style={{ fontSize: 14, fontWeight: "500", marginLeft: 10, marginRight: 10 }}>₹{deliveryfees}</Text>
                                         </View>
                                     </View>
                                     <View style={{ ...StylesGloble.oneline, marginTop: 12 }}>
                                         <View style={{ ...StylesGloble.oneline, width: "65%" }}>
-                                            <Text style={{ fontSize: 14, fontWeight: "500", marginTop: 0, alignItems: "center", justifyContent: "center", color: "#c7c7c7" }}>Feeding India Donation | </Text>
+                                            <Text style={{ fontSize: 14, fontWeight: "400", marginTop: 0, alignItems: "center", justifyContent: "center", color: "#c7c7c7" }}>Feeding India Donation | </Text>
                                             <TouchableOpacity onPress={()=>{removedonationfeesfun()}}><Text style={{ fontSize: 14, fontWeight: "500", color: "#9DC45A" }}> Remove  </Text></TouchableOpacity>
                                         </View>
                                         <View style={{ ...StylesGloble.oneline, marginLeft: "auto" }}>
-
-                                            <Text style={{ fontSize: 13, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
+                                            <Text style={{ fontSize: 13, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}></Text>
                                             <Text style={{ fontSize: 13, fontWeight: "500", marginLeft: 10, marginRight: 10 }}>₹{donetionfees}</Text>
                                         </View>
                                     </View>
@@ -757,7 +740,7 @@ const Cartscreen = ({ navigation, route }) => {
                                             <Text style={{ fontSize: 13, fontWeight: "500", marginTop: 0, color: "#c7c7c7" }}>Delivery Partner Tip</Text>
                                         </View>
                                         <View style={{ ...StylesGloble.oneline, marginLeft: "auto" }}>
-                                            <Text style={{ fontSize: 13, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}>₹0</Text>
+                                            <Text style={{ fontSize: 13, fontWeight: "500", color: "#9D9D9D", textDecorationLine: "line-through" }}></Text>
                                             <Text style={{ fontSize: 13, fontWeight: "500", marginLeft: 10, marginRight: 10 }}>₹{deliveryprt}</Text>
                                         </View>
                                     </View>
@@ -796,7 +779,7 @@ const Cartscreen = ({ navigation, route }) => {
                                         {
                                             deliverins.map((item, index) => {
                                                 return <TouchableOpacity onPress={() => { choosedeliveryoption(item) }} key={index} style={{ width: 210, height: 160, position: "relative", marginRight: 10, paddingTop: 25 }}>
-                                                    <View style={checkdeliverytype(item.id)==true ? styles.deliveroptionsel : styles.deliveroptionunsel}>
+                                                    <View style={(delivertype == item.id) ? styles.deliveroptionsel : styles.deliveroptionunsel}>
                                                         <View style={{ position: "absolute", top: -23, left: 25, borderColor: "#C4C4C480", borderRadius: 50, backgroundColor: "#ffffff", borderWidth: 1, padding: 10 }}>
                                                             <Image style={{ width: 20, height: 20 }} imageStyle={{ alignItems: "center" }} source={{ uri: item.icon }} />
                                                         </View>
@@ -843,7 +826,7 @@ const Cartscreen = ({ navigation, route }) => {
                             <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: "#FFFFFF", position: "relative" }}>
                                 <Text style={{ fontSize: 18, marginTop: 10, fontWeight: "600", color: "#000000" }}>All Coupons</Text>
                             </View>
-                            <ScrollView style={{ marginTop: 15, marginBottom: 15 }}  >
+                            <ScrollView style={{ marginTop: 15, marginBottom: 15 }}  showsVerticalScrollIndicator={false}>
                                 {
                                     couponlistco.map((item, index) => {
                                         return <View key={index} style={{ width: wp('100%') - 50, height: 170, padding: 5, borderColor: "#9D9D9D20", borderRadius: 8, borderWidth: 1, position: "relative", marginRight: 10, marginTop: 15, ...styles.box }}>

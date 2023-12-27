@@ -136,7 +136,7 @@ const Poductdetils = ({ navigation,route }) => {
     const Proname = ProductdtlData.name?ProductdtlData.name:'';
 
 
-    const Firstfeatvalue =checkPricefun(ProductdtlData.feature_values?ProductdtlData.feature_values:'');;
+    const Firstfeatvalue =checkPricefun(ProductdtlData?.feature_values?ProductdtlData?.feature_values:'');;
 
 
     const Featurename = ProductdtlData.feature_name?ProductdtlData.feature_name:'';
@@ -162,14 +162,13 @@ const Poductdetils = ({ navigation,route }) => {
     const [ChooseFetureval,setChooseFetureval]=useState(Firstfeatvalue?.feature_value);
 
     useEffect(() => {
-        console.log(ProductdtlDataRe)
 
         setTimeout(()=>{
             setskletonshow(2)
         },2000)
     },[])
     useEffect(() => {
-
+        setcartval(0);
         setsizeval(Firstfeatvalue?.id);
         setpricenew(Firstfeatvalue?.price);
         setmrpnew(Firstfeatvalue?.mrp);
@@ -178,11 +177,6 @@ const Poductdetils = ({ navigation,route }) => {
         setmaxQuantity(Firstfeatvalue?.max_quantity_per_order);
         setminStock(Firstfeatvalue?.min_stock_alert);
         setChooseFetureval(Firstfeatvalue?.feature_value);
-    },[Firstfeatvalue])
-
-    
-
-    useEffect(()=>{
         if(CartData != null && CartData != '' &&CartData.length > 0){
             let  cartData =  CartData;
             for(let i=0;i < cartData.length;i++){
@@ -193,7 +187,14 @@ const Poductdetils = ({ navigation,route }) => {
                 } 
             }
         }
-    },[CartData])
+        
+    },[Firstfeatvalue])
+
+    
+
+   
+
+  
 
     useEffect(()=>{
        callsuggestfun();
@@ -230,11 +231,8 @@ const Poductdetils = ({ navigation,route }) => {
             }
         }
         else{
-            if(cartval < 10)
-            {
-                let newcartval = cartval + 1;
-                setcartval(newcartval);
-            }
+            let newcartval = cartval + 1;
+            setcartval(newcartval);
         }
     } 
     const gotoSimlierproductfun = () => {
@@ -276,6 +274,7 @@ const Poductdetils = ({ navigation,route }) => {
                         else{
                            
                             if(cartData[i].Size!=sizeval){
+                                cartData[i].qty=cartval;
                                 newcartdata.push(cartData[i])
                             }
                             
@@ -295,7 +294,7 @@ const Poductdetils = ({ navigation,route }) => {
         setmaxQuantity(item.max_quantity_per_order);
         setminStock(item.min_stock_alert);
         setChooseFetureval(item.feature_value);
-        setpricenew(item.price);
+        setpricenew(item?.price);
         setmrpnew(item.mrp);
         setdiscount(item.discount);
         setsizeval(item.id);
@@ -351,12 +350,13 @@ const Poductdetils = ({ navigation,route }) => {
                     </SkeletonPlaceholder>
                 </View>
             }
-            <View style={{width:"100%",height:325,position:"relative",backgroundColor:"#ffffff"}}>
-                <View style={{position:"absolute",top:0,left:0,}}>
-                    <Sliderdata data={Sliderimg}/>
-                </View>
-            </View>
+           
             <ScrollView  nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:2}}>
+                <View style={{width:"100%",height:325,position:"relative",backgroundColor:"#ffffff"}}>
+                    <View style={{position:"absolute",top:0,left:0,}}>
+                        <Sliderdata data={Sliderimg}/>
+                    </View>
+                </View>
                 <View style={{...StylesGloble.container,position:"relative",paddingLeft:10,paddingRight:10}}>
                     <View style={{marginTop:5}}>
                         <Text style={{...StylesGloble.listheading}}>{Proname}</Text>
@@ -384,8 +384,8 @@ const Poductdetils = ({ navigation,route }) => {
                             {
                                 (Featurevalues.length>0)&&(
                                     Featurevalues.map((item,index)=>(
-                                        <TouchableOpacity onPress={()=>{ clickchoosefun(item) }} key={index} style={(item.feature_value==ChooseFetureval ? StylesGloble.cyheckouterborderwei : StylesGloble.outerborderwei)} >
-                                            <Text style={{fontSize:12,color:"#757575"}}>{item.feature_value}</Text>
+                                        <TouchableOpacity onPress={()=>{ clickchoosefun(item) }} key={index} style={(item?.feature_value==ChooseFetureval ? StylesGloble.cyheckouterborderwei : StylesGloble.outerborderwei)} >
+                                            <Text style={{fontSize:12,color:"#757575"}}>{item?.feature_value}</Text>
                                         </TouchableOpacity>
                                     ))
                                 )
@@ -433,7 +433,7 @@ const Poductdetils = ({ navigation,route }) => {
                                 horizontal={true}
                                 data={suggestdata}
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({item}) => <ProductItem prowdith={'40%'} item={item} navigation={navigation}/>}
+                                renderItem={({item}) => <ProductItem prowdith={'43%'} item={item} navigation={navigation}/>}
                                 keyExtractor={(item, index) => index}
                             />    
                         }   
@@ -453,7 +453,7 @@ const Poductdetils = ({ navigation,route }) => {
                                 horizontal={true}
                                 data={suggestdata}
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({item}) => <ProductItem prowdith={'40%'} item={item} navigation={navigation}/>}
+                                renderItem={({item}) => <ProductItem prowdith={'43%'} item={item} navigation={navigation}/>}
                                 keyExtractor={(item, index) => index}
                             />    
                         }    
