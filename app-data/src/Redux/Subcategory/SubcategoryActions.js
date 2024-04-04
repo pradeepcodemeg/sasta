@@ -5,17 +5,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setsubcategoryData = (id) => async (dispatch) => {
      try {
+          console.log('cateid',id)
           AsyncStorage.getItem('UserBase', (err, credentials) => {
                let  UserBase =  JSON.parse(credentials);
                dispatch({ type:SET_SUBCATEGORY_DATA });
-               let url = 'categories?order=DESC&order_by=id&row_count=50&parent_id='+id+'&token='+UserBase.userToken;
-               console.log("subcatdata__________",url);
-            
+               let url = 'categories?order=DESC&order_by=id&row_count=100&parent_id='+id+'&token='+UserBase.userToken;
                ApiDataService.Getapi(url).then(response =>{
-                    let data = response.data;
-                    if(data.length > 0)
+                    let alldata = response.data;
+                    let newdata = alldata.filter((item)=>item.active=='1')
+                    let secoundnewdata = newdata.filter((item)=>item.products > 0) 
+                    if(secoundnewdata.length > 0)
                     {
-                         dispatch({ type:SET_SUBCATEGORY_DATA, payload: data });
+                         dispatch({ type:SET_SUBCATEGORY_DATA, payload: secoundnewdata });
                     }
                     else{
                         

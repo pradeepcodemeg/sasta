@@ -3,20 +3,21 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { View, Text, ScrollView, Modal, FlatList, Image, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import Redeem from '../../assets/img/redeem.svg';
 import Frontaerrow from '../../assets/img/frontaerrow.svg';
 import Gpay from '../../assets/img/gpay.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import ApiDataService from "../../services/Apiservice.service";
+import { setUserData } from '../../Redux/index';
 
 
 const Wallet = ({ navigation, route }) => {
     const [custum, setcustum] = useState(false);
     const [trans,translist]= useState([]);
     const [amount, setamount] = useState('0');
-    console.log('a,ount=-------------',amount);
+ 
     const usaerstate = useSelector((state) => state.UserReducer.userData);
     const userToken = usaerstate ? usaerstate.userToken : null;
     const WelletBalance = usaerstate.wallet_balance;
@@ -28,10 +29,7 @@ const Wallet = ({ navigation, route }) => {
         getdatadata()
     },[])
     const getdatadata = () =>{
-      
-           
         let url = 'transactions?order=DESC&order_by=id&row_count=10&page=1&token='+userToken+'&by_user_id='+userID;
-        console.log(url);
         ApiDataService.Getapi(url).then(response => {
             if(response.data.length > 0)
             {

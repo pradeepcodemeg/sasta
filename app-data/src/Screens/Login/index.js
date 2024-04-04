@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { PermissionsAndroid, Platform, View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import TextField from './../../helper/TextField';
 import PasswordTextField from '../../helper/PasswordTextField';
 import Geolocation from '@react-native-community/geolocation';

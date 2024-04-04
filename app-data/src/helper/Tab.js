@@ -2,7 +2,7 @@ import React from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import { Dimensions, View,StyleSheet,Image, TextInput ,TouchableOpacity } from 'react-native';
-import imagePath from '../constants/imagePath';
+import imagePath from '../constants/ImagePath';
 import Homeinactive from '../assets/img/home_inactive.svg'
 import Settingactive from '../assets/img/setting_active.svg'
 import Bagactive from '../assets/img/Bag_active.svg'

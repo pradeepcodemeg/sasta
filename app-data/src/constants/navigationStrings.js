@@ -25,5 +25,6 @@ export default {
     Product:"Product",
     GooglePlacesInput:"GooglePlacesInput",
     Notification:"Notification",
-    WalletSeeAll:"WalletSeeAll"
+    WalletSeeAll:"WalletSeeAll",
+    OrderDetail:"OrderDetail"
 }

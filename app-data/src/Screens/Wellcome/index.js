@@ -1,7 +1,7 @@
 //import liraries
 import React, { useEffect, useState, useContext } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity, Modal, BackHandler, ImageBackground,Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StylesGloble } from './../../helper/Globlecss';
@@ -20,7 +20,6 @@ const Wellcome = ({ navigation, route }) => {
     useFocusEffect(
         React.useCallback(() => {
             const onBackPress = () => {
-                console.log('Back Press handled and doing no action');
                 setbackpopup(true);
                 return true;
             };

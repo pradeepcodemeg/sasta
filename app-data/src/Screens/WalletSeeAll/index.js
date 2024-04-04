@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { View, Text, ScrollView, Modal, FlatList, Image, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import Redeem from '../../assets/img/redeem.svg';
 import Frontaerrow from '../../assets/img/frontaerrow.svg';

@@ -7,12 +7,26 @@ import Orderplaced from '../../assets/img/orderplaced.svg';
 import { useSelector,useDispatch} from 'react-redux';
 import { setcartData } from './../../Redux/index';
 import { useFocusEffect } from '@react-navigation/native';
+import ApiDataService from "../../services/Apiservice.service";
+import LoadingPage from '../../helper/LoadingPage';
 
 const Orderconfirm = ({ navigation,route }) => {
     const dispatch = useDispatch();
     const orderId = route.params.orderId;
+    const [Loading, setLoading] = useState(false);
+    console.log('orderId___________',orderId);
+    const usaerstate = useSelector((state) => state.UserReducer.userData);
+    const userID = usaerstate ? usaerstate.userID : null;
+    const userToken = usaerstate ? usaerstate.userToken : null;
     const submitfun = () =>{
-        navigation.navigate('Trackorder',{orderId:orderId});
+        //navigation.navigate('Trackorder',{orderId:orderId});
+        setLoading(true)
+        let url = 'orders?order=DESC&order_by=id&row_count=5&page=1&token='+userToken+"&by_user_id="+userID+"&by_delivery_boy_id=&includes=order_details,product_details,delivery_boy_details,payment_options,delivery_address";
+        ApiDataService.Getapi(url).then(response =>{
+             setLoading(false)
+             let data = response.data;
+             navigation.navigate('Trackorder', { data: data[0] })
+        });
     }
     useFocusEffect(
         React.useCallback(() => {
@@ -41,6 +55,12 @@ const Orderconfirm = ({ navigation,route }) => {
     },[])
     return (
         <View style={{...StylesGloble.container,alignItems:"center",paddingLeft:10,paddingRight:10}}>
+             {
+                Loading &&
+                <View style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "115%", zIndex: 999999 }}>
+                    <LoadingPage />
+                </View>
+            }
             <Orderplaced style={{marginTop:90}}/>
             <Text style={{fontSize:25,marginTop:25,fontWeight:"700",color:"#000000"}}>Order Placed Successfully</Text>
             <Text style={{fontSize:14,fontWeight:"400",marginTop:15,color:"#9D9D9D"}}>Lorem Ipsum has been the industry's standard</Text>

@@ -8,7 +8,7 @@ export const setorderData = () => async (dispatch) => {
           AsyncStorage.getItem('UserBase', (err, credentials) => {
                let  UserBase =  JSON.parse(credentials);
                dispatch({ type:SET_ORDER_DATA });
-               let url = 'orders?order=DESC&order_by=id&row_count=10&page=1&token='+UserBase.userToken+"&by_user_id="+UserBase.userID+"&by_delivery_boy_id=&includes=order_details,product_details";
+               let url = 'orders?order=DESC&order_by=id&row_count=100&page=1&token='+UserBase.userToken+"&by_user_id="+UserBase.userID+"&by_delivery_boy_id=&includes=order_details,product_details,delivery_boy_details,payment_options,delivery_address";
                ApiDataService.Getapi(url).then(response =>{
                     let data = response.data;
                     dispatch({ type:SET_ORDER_DATA, payload: data });

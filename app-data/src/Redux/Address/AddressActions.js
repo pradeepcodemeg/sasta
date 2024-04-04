@@ -11,7 +11,7 @@ export const setaddressData = () => async (dispatch) => {
                let  UserBase =  JSON.parse(credentials);
                dispatch({ type: SET_ADDRESS_DATA });
                let url = 'user-addresses?order=DESC&order_by=id&row_count=10&page=1&token='+UserBase.userToken+'&by_user_id='+UserBase.userID;
-               console.log(url)
+            
                ApiDataService.Getapi(url).then(response =>{
                     let data = response.data;
                     dispatch({ type: SET_ADDRESS_DATA, payload: data });

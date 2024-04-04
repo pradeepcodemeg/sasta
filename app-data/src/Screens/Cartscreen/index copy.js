@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { View, Text, ScrollView, StyleSheet, Modal, FlatList, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import ProductItem from '../../Components/ProductItem';
 import TabItem from '../../helper/Tab';
@@ -335,7 +335,6 @@ const Cartscreen = ({ navigation, route }) => {
         } else if (deliveryaddress == 1) {
             calltoastmessage("Please add delivery address");
         } else {
-            console.log(sendcartdata(cartsavedata));
             let body = {
                 action: "add_new_order",
                 user_id: userID,
@@ -440,8 +439,6 @@ const Cartscreen = ({ navigation, route }) => {
                 Showprolist.push(...cartalldata);
             }
         }
-        console.log('_____________',Newprolist);
-        console.log('++++++++++++++++++++++++++',Showprolist,'++++++++++++++++++++++++')
         setcartalldata(Showprolist);
         for (let j = 0; j < Newprolist.length; j++) {
             totalamount = totalamount + Number(Newprolist[j].totalPrice)

@@ -6,9 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const setselectaddressData = () => async (dispatch) => {
      try {
           AsyncStorage.getItem('Selectaddress', (err, credentials) => {
-
                let  data =  JSON.parse(credentials);
-               console.log("____________datadatadatadatadata_____________",data)
                dispatch({ type: SET_SELECT_ADDRESS_DATA, payload: data });
           })
      } catch (error) {

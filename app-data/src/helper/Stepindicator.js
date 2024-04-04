@@ -9,7 +9,7 @@ import StepIndicator from 'react-native-step-indicator';
 const customStyles = {
     direction:"vertical",
     stepCount:3,
-    stepIndicatorSize: 25,
+    stepIndicatorSize: 15,
     currentStepIndicatorSize:30,
     separatorStrokeWidth: 1,
     currentStepStrokeWidth:1,

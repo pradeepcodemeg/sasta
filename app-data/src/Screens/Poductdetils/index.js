@@ -3,13 +3,15 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp, heightPercentageT
 import { View, Text, ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import ProductItem from '../../Components/ProductItem';
 import Sliderdata  from './sliderdata.js';
 import Cartminus from '../../assets/img/cartminus.svg';
 import Cartplus from '../../assets/img/cartplus.svg';
 import Rating from '../../assets/img/rating4.svg';
+import Upside from '../../assets/img/upside.svg';
+import Downside from '../../assets/img/downside.svg';
 import { useSelector,useDispatch} from 'react-redux';
 import { setcartData, setproductData } from './../../Redux/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -66,6 +68,36 @@ const dummay = {
     "feature_values": [],
     "slider_images": []
 }
+const Cartcheck = (Data,id)=>{
+    if(Data){
+        if(Data == null){
+           return 0;
+        }
+        else{
+            if(Data == ''){
+                return 0;
+            }
+            else{
+                if(Data.length > 0){
+                    let value = 0
+                    for(let i=0; i < Data.length; i++){
+                        if(Data[i].ProductId==id){
+                            value = Data[i].cartqty;
+                        }
+                    }
+                    return value;
+                }
+                else{
+                    return 0;
+                }
+            }
+        }
+    }
+    else{
+        return 0;
+    }   
+       
+}
 const checkcartdatav = (Data) =>{
     if(Data){
         if(Data == null){
@@ -104,6 +136,7 @@ const checkPricefun = (data)=>{
     let newdata = {
         "id": "",
         "store_id": "",
+        "active": "",
         "product_id": "",
         "feature_value": "",
         "mrp": "0",
@@ -117,7 +150,6 @@ const checkPricefun = (data)=>{
     if(data != null){
         newdata = data[0];
     }
-    
     return newdata;
 } 
 const Poductdetils = ({ navigation,route }) => {
@@ -128,6 +160,7 @@ const Poductdetils = ({ navigation,route }) => {
 
     const ProductdtlDataRe = useSelector((state) => state.ProductdtlReducer.data);
     const ProductdtlData =ProductdtlDataRe?ProductdtlDataRe:dummay;
+   
     
     const CartData = useSelector((state) => state.CartReducer.data);
     const Slideimagecome = ProductdtlData.slider_images?ProductdtlData.slider_images:'';
@@ -135,70 +168,53 @@ const Poductdetils = ({ navigation,route }) => {
     const Sliderimg = imagelistfun(Imagecome,Slideimagecome); 
     const Proname = ProductdtlData.name?ProductdtlData.name:'';
 
+    const ffeatvalue =checkPricefun(ProductdtlData?.feature_values?ProductdtlData?.feature_values:'');
+    const [Firstfeatvalue,setFirstfeatvalue]=useState(ffeatvalue);
+    const [ChooseFetureval,setChooseFetureval]=useState(ffeatvalue?.feature_value);
 
-    const Firstfeatvalue =checkPricefun(ProductdtlData?.feature_values?ProductdtlData?.feature_values:'');;
-
-
+    
     const Featurename = ProductdtlData.feature_name?ProductdtlData.feature_name:'';
     const Featurevalues = ProductdtlData.feature_values?ProductdtlData.feature_values:'';
-    const Description = ProductdtlData.description?ProductdtlData.description:'';
+    const Description = ProductdtlData?.description;
 
-    const [deslenght,setdeslenght]= useState(Description?Description.length:0);
-    const [showdescri,setshowdescri]= useState(0);
-    const [showdesDesc,setshowdesDesc]= useState(checkdescript(Description));
+    const [showdesDesc,setshowdesDesc]= useState(false);
     const [cartval,setcartval]=useState(0);
     const [skletonshow, setskletonshow] = useState(1);
     const [suggestdata,setsuggestdata]= useState('');
 
  
-    const [sizeval,setsizeval]=useState(Firstfeatvalue?.id);
-    const [featureValid,setfeatureValid]=useState(Firstfeatvalue?.id);
-    const [pricenew,setpricenew]=useState(Firstfeatvalue?.price);
-    const [mrpnew,setmrpnew]=useState(Firstfeatvalue?.mrp);
-    const [discount,setdiscount]=useState(Firstfeatvalue?.discount);
-    const [availableStock,setavailableStock]=useState(Firstfeatvalue?.available_stock);
-    const [maxQuantity,setmaxQuantity]=useState(Firstfeatvalue?.max_quantity_per_order);
-    const [minStock,setminStock]=useState(Firstfeatvalue?.min_stock_alert);
-    const [ChooseFetureval,setChooseFetureval]=useState(Firstfeatvalue?.feature_value);
+
 
     useEffect(() => {
-
         setTimeout(()=>{
             setskletonshow(2)
         },2000)
     },[])
+
+
     useEffect(() => {
+        let ffeatvalue22 =checkPricefun(ProductdtlData?.feature_values?ProductdtlData?.feature_values:'');
+
         setcartval(0);
-        setsizeval(Firstfeatvalue?.id);
-        setpricenew(Firstfeatvalue?.price);
-        setmrpnew(Firstfeatvalue?.mrp);
-        setdiscount(Firstfeatvalue?.discount);
-        setavailableStock(Firstfeatvalue?.available_stock);
-        setmaxQuantity(Firstfeatvalue?.max_quantity_per_order);
-        setminStock(Firstfeatvalue?.min_stock_alert);
-        setChooseFetureval(Firstfeatvalue?.feature_value);
+        setFirstfeatvalue(ffeatvalue22);
+        setChooseFetureval(ffeatvalue22?.feature_value);
         if(CartData != null && CartData != '' &&CartData.length > 0){
             let  cartData =  CartData;
             for(let i=0;i < cartData.length;i++){
                 if(cartData[i].ProductId==ProductdtlData.id){
-                    if(cartData[i].Size==Firstfeatvalue?.id){
+                    if(cartData[i].Size==ffeatvalue22?.id){
                         setcartval(cartData[i].cartqty)
                     }
                 } 
             }
         }
-        
-    },[Firstfeatvalue])
-
-    
-
+    },[ProductdtlData])
    
-
-  
 
     useEffect(()=>{
        callsuggestfun();
     },[])
+
     const callsuggestfun = ()=>{
         let url = 'products?order=DESC&order_by=id&row_count=7&page=1&token='+userToken+'&include_similar_products='+ProductdtlData.id+'&include_recommended_products='+ProductdtlData.id;
         ApiDataService.Getapi(url).then(response =>{
@@ -207,108 +223,140 @@ const Poductdetils = ({ navigation,route }) => {
                 setsuggestdata(cartdatafu)
             }
         });
-
     }
 
-   
-    const Readmorefun = (ty) =>{
-        setshowdescri(ty);
-        if(ty == '0')
-        {
-            setshowdesDesc(Description.slice(0,208))
-        }
-        else{
-            setshowdesDesc(Description)
-        }
-    }
-
-    const addremovefuncart = (type)=>{
+    const addremovefuncart = (type,price)=>{
+      
+        let quty = cartval;
         if(type=='1'){
-            if(cartval > 1)
-            {
-                let newcartval = cartval - 1;
-                setcartval(newcartval);
-            }
+            quty = quty - 1;
+        }
+        else if(type=='3'){
+            quty = 1;
         }
         else{
-            let newcartval = cartval + 1;
-            setcartval(newcartval);
+            quty = quty + 1;
         }
-    } 
+        if(checkcartdatav(CartData)==true){
+            let  newcartdata = [];
+            let checkplz = 1;
+            for(let j=0;j < CartData.length;j++){
+                if(CartData[j].ProductId==ProductdtlData.id){
+                    if(CartData[j].Size==Firstfeatvalue?.id){
+                        if(quty > 0){
+                            let  makecartdata ={
+                                userId:CartData[j].userId,
+                                ProductId:CartData[j].ProductId,
+                                Size:CartData[j].Size,
+                                cartqty:quty
+                            } 
+                            newcartdata.push(makecartdata);
+                        }
+                            checkplz = 2;
+                    }
+                }
+                else{
+                    let  makecartdata ={
+                        userId:CartData[j].userId,
+                        ProductId:CartData[j].ProductId,
+                        Size:CartData[j].Size,
+                        cartqty:CartData[j].cartqty
+                    } 
+                    newcartdata.push(makecartdata);
+                }
+                
+            }
+            if(checkplz == 1){
+                let  makecartdata ={
+                    userId:userID,
+                    ProductId:ProductdtlData?.id,
+                    Size:Firstfeatvalue?.id,
+                    cartqty:quty
+                } 
+                newcartdata.push(makecartdata);
+            }
+            setcartval(quty);
+            AsyncStorage.setItem('Cartdata',JSON.stringify(newcartdata));
+        }
+        else{
+            let  newcartdata = [];
+            let  makecartdata ={
+                userId:userID,
+                ProductId:ProductdtlData?.id,
+                Size:Firstfeatvalue?.id,
+                cartqty:quty
+            } 
+            newcartdata.push(makecartdata);
+            AsyncStorage.setItem('Cartdata',JSON.stringify(newcartdata));
+            setcartval(quty);
+        }
+        dispatch(setcartData());
+    }
+   
+
+    
     const gotoSimlierproductfun = () => {
         dispatch(setproductData('', '', '', '',ProductdtlData.id,''));
-        navigation.navigate('Product');
+        navigation.navigate('Product',{pagename:'Similar Products'});
     }
 
     const gotoMigthlikeproductfun = () => {
         dispatch(setproductData('', '', '', '','',ProductdtlData.id));
-        navigation.navigate('Product');
+        navigation.navigate('Product',{pagename:'You Might Also Like'});
     }
     const calltoastmessage = (data) => {
         Toast.showWithGravity(data, Toast.LONG, Toast.BOTTOM);
     };
     
-    const submitfun = () =>{
-        
-        if(cartval < 1){
-            calltoastmessage("Minimum one count in cart");
-        }
-        else{
-            let  makecartdata ={
-                userId:userID,
-                ProductId:ProductdtlData.id,
-                Size:featureValid,
-                cartqty:cartval
-            } 
-            AsyncStorage.getItem('Cartdata', (err, credentials) => {
-                let  cartData =  JSON.parse(credentials);
+    // const submitfun = () =>{
+    //     if(cartval < 1){
+    //         calltoastmessage("Minimum one count in cart");
+    //     }
+    //     else{
+    //         let  makecartdata ={
+    //             userId:userID,
+    //             ProductId:ProductdtlData.id,
+    //             Size:featureValid,
+    //             cartqty:cartval
+    //         } 
+    //         AsyncStorage.getItem('Cartdata', (err, credentials) => {
+    //             let  cartData =  JSON.parse(credentials);
               
-                let  newcartdata = [];
-                if(cartData == null || cartData == '' || cartData == []){
-                    newcartdata.push(makecartdata);
-                }else{
-                    for(let i=0;i < cartData.length;i++){
-                        if(cartData[i].ProductId!=ProductdtlData.id){
-                            newcartdata.push(cartData[i])
-                        }
-                        else{
+    //             let  newcartdata = [];
+    //             if(cartData == null || cartData == '' || cartData == []){
+    //                 newcartdata.push(makecartdata);
+    //             }else{
+    //                 for(let i=0;i < cartData.length;i++){
+    //                     if(cartData[i].ProductId!=ProductdtlData.id){
+    //                         newcartdata.push(cartData[i])
+    //                     }
+    //                     else{
                            
-                            if(cartData[i].Size!=sizeval){
-                                cartData[i].qty=cartval;
-                                newcartdata.push(cartData[i])
-                            }
+    //                         if(cartData[i].Size!=sizeval){
+    //                             cartData[i].qty=cartval;
+    //                             newcartdata.push(cartData[i])
+    //                         }
                             
-                        }
-                    }
-                    newcartdata.push(makecartdata);
-                }
-                AsyncStorage.setItem('Cartdata',JSON.stringify(newcartdata));
-                dispatch(setcartData());
-            })
-            navigation.navigate('Cartscreen');
-        }
-    }
+    //                     }
+    //                 }
+    //                 newcartdata.push(makecartdata);
+    //             }
+    //             AsyncStorage.setItem('Cartdata',JSON.stringify(newcartdata));
+    //             dispatch(setcartData());
+    //         })
+    //         navigation.navigate('Cartscreen');
+    //     }
+    // }
 
     const clickchoosefun = (item)=>{
-        setavailableStock(item.available_stock);
-        setmaxQuantity(item.max_quantity_per_order);
-        setminStock(item.min_stock_alert);
+        setFirstfeatvalue(item);
         setChooseFetureval(item.feature_value);
-        setpricenew(item?.price);
-        setmrpnew(item.mrp);
-        setdiscount(item.discount);
-        setsizeval(item.id);
-        setfeatureValid(item.id);
         setcartval(0);
-       
         if(CartData != null && CartData != '' &&CartData.length > 0){
             let  cartData =  CartData;
             for(let i=0;i < cartData.length;i++){
-                console.log(cartData[i].ProductId,'==',ProductdtlData.id)
                 if(cartData[i].ProductId==ProductdtlData.id){
-                    console.log(cartData[i].Size,'==',item.id)
                     if(cartData[i].Size==item.id){
-                        console.log("cart qty",cartData[i].cartqty)
                         setcartval(cartData[i].cartqty)
                     }
                 } 
@@ -357,28 +405,36 @@ const Poductdetils = ({ navigation,route }) => {
                         <Sliderdata data={Sliderimg}/>
                     </View>
                 </View>
-                <View style={{...StylesGloble.container,position:"relative",paddingLeft:10,paddingRight:10}}>
-                    <View style={{marginTop:5}}>
+                <View style={{...StylesGloble.container,position:"relative"}}>
+                    <View style={{marginTop:5,paddingLeft:10,paddingRight:10}}>
                         <Text style={{...StylesGloble.listheading}}>{Proname}</Text>
                     </View>
-                    <View style={{...StylesGloble.oneline,marginTop:10,position:"relative"}}>
-                        <Text style={{fontSize:18,fontWeight:"600",color:"#9DC45A"}}>₹ {pricenew}</Text>
-                        <Text style={{fontSize:16,fontWeight:"600",marginLeft:5,textDecorationLine:"line-through",color:"#9D9D9D"}}>₹ {mrpnew}</Text>
+                    <View style={{...StylesGloble.oneline,marginTop:10,position:"relative",paddingLeft:10,paddingRight:10}}>
+                        <Text style={{fontSize:18,fontWeight:"600",color:"#9DC45A"}}>₹ {Firstfeatvalue?.price}</Text>
+                        <Text style={{fontSize:16,fontWeight:"600",marginLeft:5,textDecorationLine:"line-through",color:"#9D9D9D"}}>₹ {Firstfeatvalue?.mrp}</Text>
                     
                         <View style={{backgroundColor:"#9DC45A",padding:3,paddingHorizontal:5,marginLeft:15,borderRadius:5}}>
-                            <Text style={{fontSize:14,color:"#000000",fontWeight:"500"}}>{discount}%   OFF</Text>
+                            <Text style={{fontSize:14,color:"#000000",fontWeight:"500"}}>{(Firstfeatvalue?.discount*100/Firstfeatvalue?.mrp).toFixed(2)} %   OFF</Text>
                         </View>
-                        <View style={{...StylesGloble.oneline,marginLeft:"auto"}}>
-                            <TouchableOpacity onPress={()=>{ addremovefuncart('1') }} style={{marginLeft:10}}>
-                                <Cartminus/>
-                            </TouchableOpacity>
-                            <Text style={{fontSize:20,color:"#000000",marginLeft:10}}>{cartval}</Text>
-                            <TouchableOpacity onPress={()=>{ addremovefuncart('2') }}  style={{marginLeft:10}}>
-                                <Cartplus/>
-                            </TouchableOpacity>
-                        </View>
+                        {
+                            (cartval==0)?(
+                                <TouchableOpacity  onPress={()=>{addremovefuncart('3')}}  style={{...StylesGloble.addbutton,width:80,height: 35,borderRadius:25,bottom:0}}>
+                                    <Text style={{fontSize:15,color:"#ffffff",fontWeight:"600"}}>ADD</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <View style={{...StylesGloble.oneline,marginLeft:"auto"}}>
+                                    <TouchableOpacity onPress={()=>{ addremovefuncart('1') }} style={{marginLeft:10}}>
+                                        <Cartminus/>
+                                    </TouchableOpacity>
+                                    <Text style={{fontSize:20,color:"#000000",marginLeft:10}}>{cartval}</Text>
+                                    <TouchableOpacity onPress={()=>{ addremovefuncart('2') }}  style={{marginLeft:10}}>
+                                        <Cartplus/>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
                     </View>
-                    <View style={{marginTop:15}}>
+                    <View style={{marginTop:15,paddingLeft:10,paddingRight:10}}>
                         <Text style={{...StylesGloble.listheading}}>{Featurename}</Text>
                         <View style={{...StylesGloble.oneline,marginTop:10,marginLeft:0}}>
                             {
@@ -391,34 +447,25 @@ const Poductdetils = ({ navigation,route }) => {
                                 )
                             }
                         </View>
-                        {/* <View style={{...StylesGloble.oneline,marginTop:15}}>
-                            <Rating/>
-                            <Text style={{fontSize:14,color:"#757575",marginLeft:10}}>4.5 Reviews</Text>
-                        </View> */}
                     </View>
-                    <View style={{marginTop:15}}>
-                        <Text style={{...StylesGloble.listheading}}>Discription</Text>
-                        <View style={{marginTop:5,position:"relative"}}>
-                            <Text style={{fontSize:12,color:"#A6A6A6",width:wp('99%')}}>{showdesDesc}</Text>
+                    <TouchableOpacity  onPress={()=>{setshowdesDesc(!showdesDesc)}} style={{backgroundColor:"#f4fbe55e",width:"100%",padding:10,marginTop:15}}>
+                        <Text style={{...StylesGloble.listheading}}>Description</Text>
+                        <TouchableOpacity onPress={()=>{setshowdesDesc(!showdesDesc)}} style={{position:"absolute",top:0,right:-5,padding:15}}>
                             {
-                                (deslenght >208)?(
-                                    (showdescri==0)?(
-                                        <TouchableOpacity onPress={()=>{Readmorefun('1')}} style={{position:"absolute",top:45,right:3}} >
-                                            <Text style={{fontSize:12,marginRight:15,marginTop:5,fontWeight:"500", color:"#9DC45A"}}>Read More</Text>
-                                        </TouchableOpacity>
-                                    ):(
-                                        <TouchableOpacity onPress={()=>{Readmorefun('0')}} style={{position:"absolute",bottom:0,right:3}} >
-                                            <Text style={{fontSize:12,marginRight:15,marginTop:5,fontWeight:"500", color:"#9DC45A"}}>Read Less</Text>
-                                        </TouchableOpacity>
-                                    )
-                                ):(
-                                    <></>
-                                )
+                                showdesDesc==false?
+                                <Downside width="15" height="15" />
+                                :
+                                <Upside width="15" height="15"/>
                             }
-                        </View>
-                    
-                    </View>
-                    <View style={{...StylesGloble.oneline,marginTop:20}}>
+                        </TouchableOpacity>
+                        {
+                            showdesDesc&&
+                            <View style={{marginTop:5,position:"relative"}}>
+                                <Text style={{fontSize:12,color:"#A6A6A6",width:wp('93%')}}>{Description}</Text>
+                            </View>
+                        }
+                    </TouchableOpacity>
+                    <View style={{...StylesGloble.oneline,marginTop:20,paddingLeft:10,paddingRight:10}}>
                         <View style={{width:wp('79%')}}>
                             <Text style={{...StylesGloble.listheading}}>Similar Products</Text>
                         </View>
@@ -426,19 +473,19 @@ const Poductdetils = ({ navigation,route }) => {
                             <Text style={{...StylesGloble.listviewallfont}}>See all</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{marginTop:10}}>
+                    <View style={{marginTop:2,paddingLeft:10,paddingRight:10}}>
                         {
                             suggestdata&&
                             <FlatList
                                 horizontal={true}
                                 data={suggestdata}
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({item}) => <ProductItem prowdith={'43%'} item={item} navigation={navigation}/>}
+                                renderItem={({item}) => <ProductItem prowdith={'100%'} item={item} navigation={navigation}/>}
                                 keyExtractor={(item, index) => index}
                             />    
                         }   
                     </View>
-                    <View style={{...StylesGloble.oneline,marginTop:20}}>
+                    <View style={{...StylesGloble.oneline,marginTop:20,paddingLeft:10,paddingRight:10}}>
                         <View style={{width:wp('79%')}}>
                             <Text style={{...StylesGloble.listheading}}>You Might Also Like</Text>
                         </View>
@@ -446,23 +493,23 @@ const Poductdetils = ({ navigation,route }) => {
                             <Text style={{...StylesGloble.listviewallfont}}>See all</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{marginTop:10}}>
+                    <View style={{marginTop:2,paddingLeft:10,paddingRight:10}}>
                         {
                             suggestdata&&
                             <FlatList
                                 horizontal={true}
                                 data={suggestdata}
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({item}) => <ProductItem prowdith={'43%'} item={item} navigation={navigation}/>}
+                                renderItem={({item}) => <ProductItem prowdith={'100%'} item={item} navigation={navigation}/>}
                                 keyExtractor={(item, index) => index}
                             />    
                         }    
                     </View>
                 </View>
             </ScrollView>
-            <View style={{width:wp('100%'),height:63,paddingHorizontal:wp('5%'),paddingTop:8,backgroundColor:"#FFFFFF"}}>
+            {/* <View style={{width:wp('100%'),height:63,paddingHorizontal:wp('5%'),paddingTop:8,backgroundColor:"#FFFFFF"}}>
                 <ButtonField label={'Add to Cart'} submitfun={submitfun}/>
-            </View>
+            </View> */}
         </>
     );
 };

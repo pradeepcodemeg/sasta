@@ -190,6 +190,9 @@ const GooglePlacesInput= (props) => {
                             placeholder='Search a new address'
                             fetchDetails={true}
                             ref={placesRef}
+                            textInputProps={{
+                                placeholderTextColor: '#000000',
+                            }}
                             onPress={(data,details) => {
                                // props.onPress(data,details)
                                placechhose(data,details)
@@ -204,27 +207,37 @@ const GooglePlacesInput= (props) => {
                                     flex: 1,
                                     height:'auto',
                                     padding:15,
-                                    marginTop:10,
+                                    marginTop:-5,
+                                    color:"#000000",
                                     width:windowWidth
                                 },
                                 textInputContainer: {
                                     flexDirection: 'row',
+                                    color:"#000000",
                                 },
                                 textInput: {
-                                    backgroundColor: '#FFFFFF',
-                                    height: 60,
-                                    borderRadius: 5,
+                                    backgroundColor: '#e3e3e3',
+                                    height: 50,
                                     paddingVertical: 5,
                                     paddingHorizontal: 10,
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     flex: 1,
+                                    borderRadius: 30,
+                                    flexDirection: 'row',
+                                    marginTop: 10,
+                                    elevation: 1,
+                                    borderWidth: 1,
+                                    paddingLeft:25,
+                                    borderColor: '#D1D1D1',
+                                    color:"#000000",
                                 },
                                 predefinedPlacesDescription: {
-                                    color: '#1faadb'
+                                    color: '#1faadb',
+                                    
                                 },
                                 poweredContainer: {
                                     justifyContent: 'flex-end',
-                                    backgroundColor:"red",
+                                    placeholderTextColor: 'red',
                                     alignItems: 'center',
                                     borderBottomRightRadius: 5,
                                     borderBottomLeftRadius: 5,
@@ -232,23 +245,29 @@ const GooglePlacesInput= (props) => {
                                     borderTopWidth: 0.5,
                                     backgroundColor: '#edf0f1',
                                     width:windowWidth,
+                                    color:"#000000",
                                     padding:15,
                                     height:50
                                 },
                                 powered: {},
-                                listView: {},
+                                listView: {
+                                    backgroundColor:"#000000",  
+                                },
                                 row: {
                                     zIndex:9999,
                                     padding: 13,
                                     height: 50,
-                                    color:"#000000",
+                                    backgroundColor:"#ffffff",
                                     flexDirection: 'row'
                                 },
                                 separator: {
                                     height: 0.5,
                                     backgroundColor: '#c8c7cc',
+                                   
                                 },
-                                description: {},
+                                description: {
+                                    color:"#000000",
+                                },
                                 loader: {
                                     flexDirection: 'row',
                                     justifyContent: 'flex-end',

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Text,TextInput,StyleSheet,View,TouchableOpacity,Modal,Image,Platform,PermissionsAndroid,ImageBackground} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
-import imagePath from '../constants/imagePath';
+import imagePath from '../constants/ImagePath';
 import ApiDataService from "../services/Apiservice.service";
 
 const ImagePicker = require('react-native-image-picker');

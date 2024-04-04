@@ -3,7 +3,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { View, Text,StyleSheet, ActivityIndicator, ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
 import ButtonField  from '../../helper/ButtonField';
 import { StylesGloble } from '../../helper/Globlecss';
-import imagePath from '../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import TabItem from '../../helper/Tab';
 import ProductItem from '../../Components/ProductItem';
@@ -27,9 +27,10 @@ const Product = ({ navigation,route }) => {
     const search=  productstate?productstate.search:null;
     const row_count=  productstate?productstate.row_count:null;
     const page=  productstate?productstate.page:null;
+    const pagename = route.params.pagename;
 
-    const [pageLoad,setpageLoad ]= useState(page);
-    const [productlist,setproductlist]=useState(productlistre);
+    const [pageLoad,setpageLoad ]= useState(1);
+    const [productlist,setproductlist]=useState([]);
     const [Activeloading, setActiveloading] = useState(false);
     const [alldataupload,setalldataupload ]= useState(0);
     const [skletonshow, setskletonshow] = useState(1);
@@ -37,8 +38,13 @@ const Product = ({ navigation,route }) => {
     useEffect(() => {
         setTimeout(()=>{
             setskletonshow(2)
-        },2000)
+        },3000)
     },[])
+
+    useEffect(() => {
+        setproductlist(productlistre);
+       
+    },[productlistre])
 
 
 
@@ -53,18 +59,19 @@ const Product = ({ navigation,route }) => {
                 by_brand_id_call="&by_brand_id="+by_brand_id;
             }
             var by_category_id_call="";
-            if(by_category_id_call){
+            if(by_category_id){
                 by_category_id_call="&by_category_id="+by_category_id;
             }
             var by_type_call="";
-            if(by_type_call){
+            if(by_type){
                 by_type_call="&by_type="+by_type;
             }
             var search_call="";
-            if(search_call){
+            if(search){
                 search_call="&search="+search;
             }
-            let url = 'products?order=DESC&order_by=id&row_count='+row_count+'&page='+newpageLoad+'&user_id='+userID+'&token='+userToken+by_brand_id_call+by_category_id_call+by_type_call+search_call;
+            let url = 'products?order=DESC&order_by=id&row_count='+row_count+'&page='+newpageLoad+'&user_id='+userID+'&token='+userToken+by_brand_id_call+by_category_id_call+by_type_call+search_call+'&by_stock=available';
+         
             ApiDataService.Getapi(url).then(response => {
                
                 if(response.data.length > 0)
@@ -102,7 +109,7 @@ const Product = ({ navigation,route }) => {
    
     return (
         <>
-            <HeaderComp text={'All Products'} navigation={navigation} type={'1'}/>
+            <HeaderComp text={pagename} navigation={navigation} type={'1'}/>
             {
                 skletonshow==1&&
                 <View style={{width:"100%",height:'100%' , position: "relative"}}>

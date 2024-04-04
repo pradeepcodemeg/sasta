@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setproductData = (by_brand_id,by_category_id,by_type,search,similar_products,recommended_products) => async (dispatch) => {
      try {
+          dispatch({ type:SET_PRODUCT_DATA, payload: [] });
           AsyncStorage.getItem('UserBase', (err, credentials) => {
                let UserBase =  JSON.parse(credentials);
               
@@ -35,12 +36,12 @@ export const setproductData = (by_brand_id,by_category_id,by_type,search,similar
              
                dispatch({ type:SET_PRODUCT_DATA });
                let url = 'products?order=DESC&order_by=id&row_count=10&page=1&user_id='+UserBase.userID+'&token='+UserBase.userToken+by_brand_id_call+by_category_id_call+by_type_call+search_call+
-               include_similar_products+include_recommended_products;
-             
+               include_similar_products+include_recommended_products+'&by_stock=available';
                ApiDataService.Getapi(url).then(response =>{
-                   
+                    let alldata = response.data;
+                    let newdata = alldata.filter((item)=>item.active=='1')
                     let data = {
-                         data : response.data,
+                         data : newdata,
                          by_brand_id: by_brand_id,
                          by_category_id: by_category_id,
                          by_type: by_type,

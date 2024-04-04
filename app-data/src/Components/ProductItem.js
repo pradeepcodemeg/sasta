@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { View, Text, ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
-import imagePath from '../constants/imagePath';
+import imagePath from '../constants/ImagePath';
 import { StylesGloble } from '../helper/Globlecss';
 import Addpro from '../assets/img/addpro.svg';
 import { setproductdtlData,setcartData} from '../Redux/index';
@@ -69,20 +69,29 @@ const checkcartdatav = (Data) =>{
 }
 
 const checkprice = (item) =>{
-    var price  = 0;
+    var allprice  = {
+        price:0,
+        mrp:0,
+        feature_value:0
+    };
+  
     if(item?.feature_values != null){
-        price= item?.feature_values[0]?.price;
+        allprice.price= item?.feature_values[0]?.price;
+        allprice.mrp= item?.feature_values[0]?.mrp;
+        allprice.feature_value= item?.feature_values[0]?.feature_value;
     }
-    return price;
+    return allprice;
 }
 
 const ProductItem = ({item,navigation,prowdith}) => {
-
+    
     const dispatch = useDispatch();
     const CartData = useSelector((state) => state.CartReducer.data);
     const usaerstate = useSelector((state) => state.UserReducer.userData);
     const userID = usaerstate ? usaerstate.userID : null;
-    const price = checkprice(item);
+    const price = checkprice(item).price;
+    const mrp = checkprice(item).mrp;
+    const feature_value = checkprice(item).feature_value;
     
     let cartcount = Cartcheck(CartData,item.id); 
     const gotoproductdetls = (item)=>{
@@ -136,8 +145,8 @@ const ProductItem = ({item,navigation,prowdith}) => {
             if(checkplz == 1){
                 let  makecartdata ={
                     userId:userID,
-                    ProductId:item.id,
-                    Size:item.feature_values[0].id,
+                    ProductId:item?.id,
+                    Size:item?.feature_values[0]?.id,
                     cartqty:quty
                 } 
                 newcartdata.push(makecartdata);
@@ -149,8 +158,8 @@ const ProductItem = ({item,navigation,prowdith}) => {
             let  newcartdata = [];
             let  makecartdata ={
                 userId:userID,
-                ProductId:item.id,
-                Size:item.feature_values[0].id,
+                ProductId:item?.id,
+                Size:item?.feature_values[0]?.id,
                 cartqty:quty
             } 
             newcartdata.push(makecartdata);
@@ -160,37 +169,44 @@ const ProductItem = ({item,navigation,prowdith}) => {
         dispatch(setcartData());
     }
     return (
-        <TouchableOpacity onPress={()=>{ gotoproductdetls(item)}} style={{...StylesGloble.productView,height:220,maxWidth:wp(prowdith)}} >
-            {
-                (item.image != '' || item.image != null)?(
-                    <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={{uri :item.image}} />
-                ):(
-                    <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={imagePath.meat} />                
-                ) 
-            }
-            <View style={{...StylesGloble.productviewdata}}>
-                <Text numberOfLines={2} style={{fontSize:13,fontWeight:"500",marginTop:5,color:"#000000",width:120}}>{item.name}</Text>
-                <Text numberOfLines={1} style={{...StylesGloble.fontsmallsimple,color:"#000000",marginBottom:10,fontSize:10,width:120}}>{item.category_Name}</Text>
-                <Text style={{fontSize:15,fontWeight:"600",marginTop:0,color:"#9DC45A"}}>₹{price}</Text>
-            </View>
-            {
-                (cartcount==0)?(
-                    <TouchableOpacity  onPress={()=>{addremovefuncart('3',item,price)}}  style={{...StylesGloble.addbutton,}}>
-                       <Text style={{fontSize:12,color:"#ffffff",fontWeight:"600"}}>ADD</Text>
-                    </TouchableOpacity>
-                ):( 
-                    <View style={{...StylesGloble.oneline,position:"absolute",top:176,right:0,padding:5,paddingBottom:10}}>
-                        <TouchableOpacity onPress={()=>{ addremovefuncart('1',item,price)}} style={{zIndex:9999,padding:8}}>
-                            <Cartminus width={22} height={22}/>
+        <> 
+       
+                <TouchableOpacity onPress={()=>{ gotoproductdetls(item)}} style={{...StylesGloble.productView, height:220,maxWidth:prowdith}} >
+                {
+                    (item.image != '' || item.image != null)?(
+                        <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={{uri :item.image}} />
+                    ):(
+                        <Image style={{...StylesGloble.productimg}}  imageStyle={{alignItems:"center"}} source={imagePath.meat} />                
+                    ) 
+                }
+                <View style={{...StylesGloble.productviewdata}}>
+                    <Text numberOfLines={2} style={{fontSize:13,fontWeight:"500",marginTop:20,color:"#000000",width:120}}>{item.name}</Text>
+                    <Text numberOfLines={1} style={{...StylesGloble.fontsmallsimple,color:"#000000",marginBottom:0,fontSize:10,width:120}}>{item.category_Name}</Text>
+                    <Text style={{fontSize:13,fontWeight:"500",marginTop:0,color:"#000000"}}>{feature_value}</Text>
+                    <Text style={{fontSize:13,fontWeight:"500",marginTop:5,color:"#adadad",textDecorationLine:"line-through"}}>₹{mrp}</Text>
+                    <Text style={{fontSize:13,fontWeight:"600",marginTop:5,color:"#9DC45A"}}>₹{price}</Text>
+                </View>
+                {
+                    (cartcount==0)?(
+                        <TouchableOpacity  onPress={()=>{addremovefuncart('3',item,price)}}  style={{...StylesGloble.addbutton,}}>
+                           <Text style={{fontSize:12,color:"#ffffff",fontWeight:"600"}}>ADD</Text>
                         </TouchableOpacity>
-                        <Text style={{fontSize:15,color:"#000000",marginLeft:-8,marginTop:8}}> {cartcount} </Text>
-                        <TouchableOpacity onPress={()=>{ addremovefuncart('2',item,price)}}  style={{ zIndex:9999,marginLeft:-8,padding:8}}>
-                            <Cartplus width={22} height={22}/>
-                        </TouchableOpacity>
-                    </View>
-                )
-            }
-        </TouchableOpacity>
+                    ):( 
+                        <View style={{...StylesGloble.oneline,position:"absolute",top:176,right:0,padding:5,paddingBottom:10}}>
+                            <TouchableOpacity onPress={()=>{ addremovefuncart('1',item,price)}} style={{zIndex:9999,padding:8}}>
+                                <Cartminus width={22} height={22}/>
+                            </TouchableOpacity>
+                            <Text style={{fontSize:15,color:"#000000",marginLeft:-8,marginTop:8}}> {cartcount} </Text>
+                            <TouchableOpacity onPress={()=>{ addremovefuncart('2',item,price)}}  style={{ zIndex:9999,marginLeft:-8,padding:8}}>
+                                <Cartplus width={22} height={22}/>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
+            </TouchableOpacity>
+           
+        </>
+       
     );
 };
 

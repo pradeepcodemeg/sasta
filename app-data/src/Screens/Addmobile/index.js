@@ -4,7 +4,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { PermissionsAndroid,Platform,View, Text, StyleSheet,Modal,ScrollView,Image, TouchableOpacity } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import TextField  from './../../helper/TextField';
 import PasswordTextField  from '../../helper/PasswordTextField';
 import Geolocation from '@react-native-community/geolocation';
@@ -30,7 +30,6 @@ const Addmobile = ({ navigation,route }) => {
     const gettermsofuse = async () => {
         let url = `main-data`
         ApiDataService.Getapi(url).then(response => {
-            console.log('response----------------',response.data.terms_of_use);
         }).catch(e => {
         })
     }
@@ -104,9 +103,7 @@ const Addmobile = ({ navigation,route }) => {
             setLoading(true);
             
             ApiDataService.Getapi('otp/send/'+inputmobile.value).then(response => {
-                console.log(response.data)
                 setLoading(false);
-              
                 if(response.data.status==1)
                 {
                     navigation.navigate('Otp',{

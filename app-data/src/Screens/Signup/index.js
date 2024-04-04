@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { PermissionsAndroid, Platform, View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import TextField from './../../helper/TextField';
 import PasswordTextField from '../../helper/PasswordTextField';
 import Geolocation from '@react-native-community/geolocation';
@@ -100,7 +100,7 @@ const Signup = ({ navigation, route }) => {
                 //     fullname: inputname.value,
                 //     action: "add_new_user"
                 // }
-                 let body = {
+                let body = {
                     mobile: mobile,
                     fullname: inputname.value,
                     action: "register_user"
@@ -173,11 +173,11 @@ const Signup = ({ navigation, route }) => {
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ ...StylesGloble.fontsmall }}>By continuing you agree to our</Text>
                         <View style={{ flexDirection: "row", marginTop: hp('1%') }}>
-                            <TouchableOpacity onPress={()=>navigation.navigate('Aboutus',{pagetype:1})}>
+                            <TouchableOpacity onPress={() => navigation.navigate('Aboutus', { pagetype: 1 })}>
                                 <Text style={{ ...StylesGloble.fontsmall, color: "#9DC45A" }}> Terms of Service</Text>
                             </TouchableOpacity>
                             <Text style={{ ...StylesGloble.fontsmall }}>  and  </Text>
-                            <TouchableOpacity onPress={()=>navigation.navigate('Aboutus',{pagetype:2})}>
+                            <TouchableOpacity onPress={() => navigation.navigate('Aboutus', { pagetype: 2 })}>
                                 <Text style={{ ...StylesGloble.fontsmall, color: "#9DC45A" }}>Privacy Policy</Text>
                             </TouchableOpacity>
                         </View>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { View, Text, ScrollView, Modal, FlatList, Image, TouchableOpacity, ImageBackground, PermissionsAndroid, Dimensions } from 'react-native';
+import { View, Text, ScrollView, Modal,Alert, FlatList, Image, TouchableOpacity, ImageBackground, PermissionsAndroid, Dimensions,BackHandler } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import SearchField from './../../helper/SearchField';
 import Sliderdata from '../../helper/sliderdata';
 import TabItem from '../../helper/Tab';
@@ -13,22 +14,19 @@ import ProductItem from '../../Components/ProductItem';
 import OfferComp from '../../Components/OfferComp';
 import Locationicon from '../../assets/img/locationicon.svg';
 import Downarray from '../../assets/img/downarray.svg';
-
+import { WebView } from 'react-native-webview';
 import Searchicon from '../../assets/img/searchicon.svg';
 import Avatar from '../../assets/img/avatar.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
+import Toast from 'react-native-simple-toast';
 
 import Carousel from 'react-native-snap-carousel';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { setproductData, sethomeData, setsubcategoryData } from './../../Redux/index';
 import { getFormattedAddress, requestLocationPermission } from '"./../../services/LocationServices';
-
-
-
-
-
+import { useFocusEffect } from '@react-navigation/native';
 export const SLIDER_WIDTH = Dimensions.get('window').width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 const width = Dimensions.get('window').width;
@@ -38,6 +36,7 @@ const Home = ({ navigation, route }) => {
     const allpagedata = [{}];
     const dispatch = useDispatch();
     const isCarousel = useRef(null);
+    const firsttime = useRef(0);
     const mySlide = useRef();
     const [timesec, settimesec] = useState('');
     const [currentlat, setcurrentlat] = useState('');
@@ -55,7 +54,6 @@ const Home = ({ navigation, route }) => {
     const username = usaerstate ? usaerstate.fullname : null;
     const userimg = usaerstate ? usaerstate.profile_pic : null;
     const useraddress = usaerstate ? usaerstate.address : null;
-
     const homestate = useSelector((state) => state.HomeReducer.data);
     const categorieslist = homestate ? homestate.categories : null;
     const sliderImageslist = homestate ? homestate.slider_images : null;
@@ -64,28 +62,72 @@ const Home = ({ navigation, route }) => {
     const bestDealslist = homestate ? homestate.best_deals : null;
     const best_offerslist = homestate ? homestate.best_offers : null;
 
- 
+
 
     const [search, setsearch] = useState('');
     const [skletonshow, setskletonshow] = useState(1);
 
-    const Changevalue = (text) => {
-        setsearch(text);
+    const gotoweblink = (text) => {
+        if(isValidUrl(text)==true){
+            return <WebView source={{ uri: text }} style={{ flex: 1 }} />;
+        }
+    }
+
+    const isValidUrl = (string)=> {
+        try {
+            new URL(string);
+            return true;
+        } catch (err) {
+                return false;
+        }
+
+        // var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+        // return regexp.test(s);
     }
     useEffect(() => {
-       
-        // setTimeout(() => {
-        //     if(locationname==''){
-        //         navigation.navigate('GooglePlacesInput');
-        //         setskletonshow(2);
-        //     }
-           
-        // }, 5000)
         setTimeout(() => {
             setskletonshow(2);
-           
         }, 3000)
     }, [])
+    useEffect(() => {
+        AsyncStorage.getItem('checkavilbale', (err, cre) => {
+            if(cre != '1'){
+                setskletonshow(2);
+                navigation.navigate('CheckLoc')
+            }
+        })
+       
+    }, [selectaddresstate])
+
+
+    useFocusEffect(
+        
+        React.useCallback(() => {
+            const onBackPress = () => {
+                if(firsttime.current==1){
+                    BackHandler.exitApp();
+                }else{
+                    Toast.showWithGravity('Press again, if you want to exist the application', Toast.LONG, Toast.BOTTOM);
+                    firsttime.current=1;
+                    setTimeout(()=>{
+                        firsttime.current=0;
+                    },2000)
+                    
+                }
+                return true;
+            };
+            BackHandler.addEventListener(
+                'hardwareBackPress',
+                onBackPress
+            );
+            return () => {
+                BackHandler.removeEventListener(
+                    'hardwareBackPress',
+                    onBackPress
+                );
+            };
+        }, []),
+    );
  
     useEffect(() => {
         let date = new Date();
@@ -101,84 +143,32 @@ const Home = ({ navigation, route }) => {
         }
     }, [])
 
-    useEffect(() => {
-        const requestLocationPermission = async () => {
-            if (Platform.OS === 'ios') {
-                getOneTimeLocation();
-            } else {
-                try {
-                    const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                        {
-                            title: 'Location Access Required',
-                            message: 'This App needs to Access your location',
-                        },
-                    );
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        getOneTimeLocation();
-                    }
-                } catch (err) {
-                    console.warn(err);
-                }
-            }
-        };
-        requestLocationPermission();
-        dispatch(sethomeData());
-
-    }, [])
-
-    const getOneTimeLocation = () => {
-        Geolocation.getCurrentPosition(
-            (position) => {
-                setcurrentlat(position.coords.latitude);
-                setcurrentlng(position.coords.longitude);
-
-            }, (error) => {
-                getOneTimeLocation();
-            },
-        );
-    };
-
-
-    const gotoProductlistfun = (type) => {
+    const gotoProductlistfun = (type,name) => {
         dispatch(setproductData('', '', type, '','',''));
-        navigation.navigate('Product');
+        navigation.navigate('Product',{pagename:name});
     }
     const gotosuncategoryfun = (data) => {
-        
         dispatch(setsubcategoryData(data.id))
         dispatch(setproductData('', data.id, '', '','',''));
         navigation.navigate('SubCategory', { data: data })
     }
 
     const slideritem = (item)=>{
+        
         return (
-            <View key={item.index} style={{ padding: 0 }}>
+            <View key={item.index} style={{padding:0,backgroundColor:"#f1f1f1"}}>
+                <TouchableOpacity onPress={()=>{gotoweblink(item.item.destination)}} style={{ height:180, width: '100%',borderRadius:8}}>
                 {
                     (item.item.image) ? (
-                        <Image source={{ uri: item.item.image }}  resizeMode={'stretch'}  style={{ height:180, width: '100%'}} />
+                        <Image source={{ uri: item.item.image }}  resizeMode={'contain'}  style={{ height:180, width: '100%',borderRadius:8}} />
                     ) : (
-                        <Image source={imagePath.banner1} resizeMode={'stretch'} style={{ height:180, width: '100%' }} />
+                        <Image source={imagePath.banner1} resizeMode={'contain'} style={{ height:180, width: '100%',borderRadius:8 }} />
                     )
                 }
+                </TouchableOpacity>
             </View>
         )
     }
-    const minislideritem = (item)=>{
-        return (
-           
-            <View  style={{ width: width-75, height: 120,margin:5,borderRadius: 5}}>
-            {
-                (item.item.image) ? (
-                    <Image source={{ uri:item.item.image}} resizeMode={'stretch'} style={{ width: width-75,borderRadius: 5, height: 120}}/>
-                ) : (
-                    <Image source={{ uri: imagePath.banner1 }} resizeMode={'stretch'} style={{ height:120,borderRadius: 5, width: width-75 }} />
-                )
-            }
-        </View>
-        )
-    }
-
 
     return (
         <>
@@ -233,7 +223,7 @@ const Home = ({ navigation, route }) => {
                                     <Text style={{ ...StylesGloble.fontsmallsimple,color: "#979899", fontSize: 12, fontWeight: "500" }}>{timesec}</Text>
                                     <Text style={{ fontSize: 16, fontWeight: "500",color: "#000000" }}>{username}</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => { navigation.navigate('GooglePlacesInput'); }} style={{ position: "absolute", top: 10, right: -7, flexDirection: "row", backgroundColor: "#eaf3e0a8", padding: 10, paddingHorizontal: 10, borderRadius: 20, zIndex: 99999 }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate('GooglePlacesInput','1'); }} style={{ position: "absolute", top: 10, right: -7, flexDirection: "row", backgroundColor: "#eaf3e0a8", padding: 10, paddingHorizontal: 10, borderRadius: 20, zIndex: 99999 }}>
                                     <Locationicon width={15} height={18} fill={"green"} />
                                     <View style={{ marginTop: -5, width:130 }}>
                                         <Text numberOfLines={1} style={{ marginHorizontal: 5, marginTop: 0, fontSize: 12, fontWeight: "500", color: "#06161C" }}>{locationname}</Text>
@@ -294,7 +284,7 @@ const Home = ({ navigation, route }) => {
                                             horizontal={true}
                                             data={best_offerslist}
                                             showsHorizontalScrollIndicator={false}
-                                            renderItem={({ item }) => <OfferComp item={item} navigation={navigation} />}
+                                            renderItem={({ item }) => <OfferComp item={item} navigation={navigation} gotoweblink={gotoweblink}/>}
                                             keyExtractor={(item, index) => index}
                                         />
                                     )
@@ -308,7 +298,7 @@ const Home = ({ navigation, route }) => {
                                             <View style={{ marginLeft: 5 }}>
                                                 <Text style={{ ...StylesGloble.listheading }}>Best Deals</Text>
                                             </View>
-                                            <TouchableOpacity onPress={() => { gotoProductlistfun('best_deal') }} style={{ marginRight: 0 }}>
+                                            <TouchableOpacity onPress={() => { gotoProductlistfun('best_deal','Best Deals') }} style={{ marginRight: 0 }}>
                                                 <Text style={{ ...StylesGloble.listviewallfont }}>See All</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -317,7 +307,7 @@ const Home = ({ navigation, route }) => {
                                                 horizontal={true}
                                                 data={bestDealslist}
                                                 showsHorizontalScrollIndicator={false}
-                                                renderItem={({ item }) => <ProductItem prowdith={'45%'} item={item} navigation={navigation} />}
+                                                renderItem={({ item }) => <ProductItem prowdith={'100%'} item={item} navigation={navigation} />}
                                                 keyExtractor={(item, index) => index}
                                             />
                                         </View>
@@ -333,6 +323,7 @@ const Home = ({ navigation, route }) => {
                                             data={mini_slider_images}
                                             showsHorizontalScrollIndicator={false}
                                             renderItem={({ item }) => <View  style={{ width: width-75, height: 120,margin:5,borderRadius: 5}}>
+                                                    <TouchableOpacity onPress={()=>{gotoweblink(item.destination)}} style={{ width: width-75,borderRadius: 5, height: 120}}>
                                                     {
                                                         (item.image) ? (
                                                             <Image source={{ uri:item.image}} resizeMode={'stretch'} style={{ width: width-75,borderRadius: 5, height: 120}}/>
@@ -340,6 +331,7 @@ const Home = ({ navigation, route }) => {
                                                             <Image source={{ uri: imagePath.banner1 }} resizeMode={'stretch'} style={{ height:120,borderRadius: 5, width: width-75 }} />
                                                         )
                                                     }
+                                                    </TouchableOpacity>
                                                 </View>
                                             }
                                             keyExtractor={(item, index) => index}
@@ -378,7 +370,7 @@ const Home = ({ navigation, route }) => {
                                             <View style={{ marginLeft: 5 }}>
                                                 <Text style={{ ...StylesGloble.listheading }}>Top Trends</Text>
                                             </View>
-                                            <TouchableOpacity onPress={() => { gotoProductlistfun('trending') }} style={{ marginRight: 10 }}>
+                                            <TouchableOpacity onPress={() => { gotoProductlistfun('trending','Top Trends') }} style={{ marginRight: 10 }}>
                                                 <Text style={{ ...StylesGloble.listviewallfont }}>See All</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -387,7 +379,7 @@ const Home = ({ navigation, route }) => {
                                                 horizontal={true}
                                                 data={topTrendslist}
                                                 showsHorizontalScrollIndicator={false}
-                                                renderItem={({ item }) => <ProductItem prowdith={'45%'} item={item} navigation={navigation} />}
+                                                renderItem={({ item }) => <ProductItem prowdith={'100%'} item={item} navigation={navigation} />}
                                                 keyExtractor={(item, index) => index}
                                             />
                                         </View>

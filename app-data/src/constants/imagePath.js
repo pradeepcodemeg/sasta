@@ -86,5 +86,12 @@ export default {
     Up:require('../assets/images/Up.png'),
     logout_2:require('../assets/images/logout_2.png'),
     logout:require('../assets/images/logout.png'),
-    cross:require('../assets/images/cross.png')
+    cross:require('../assets/images/cross.png'),
+    sclogo:require('../assets/images/sclogo.png'),
+    Nolocation:require('../assets/img/no-location.png'),
+    NoService:require('../assets/Tab/NoService.png'),
+    p1:require('../assets/Tab/p1.png'),
+    p2:require('../assets/Tab/p2.png'),
+    p3:require('../assets/Tab/p3.png')
+
 }

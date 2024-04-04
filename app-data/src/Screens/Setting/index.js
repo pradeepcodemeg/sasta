@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { View, Text, ScrollView, Modal,Pressable,BackHandler,  FlatList, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import TabItem from '../../helper/Tab';
 import Order from '../../assets/img/order.svg';

@@ -8,7 +8,6 @@ class ApiDataService {
 
     Getapi(url) {
         let newurl = API_URL+url;
-        
         return http.get(newurl);
     }
     Deleteapi(url) {
@@ -29,9 +28,7 @@ class ApiDataService {
 
     Uploadapi(url,data) {
         let newurl = API_URL+url;
-        console.log(newurl);
         let postData = data;
-        console.log(postData);
         let config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -44,9 +41,7 @@ class ApiDataService {
 
     checkpaipost(url,data){
         let newurl = url;
-        console.log(newurl);
         let postData = data;
-        console.log(postData);
         let config = {
             headers: {
                 'x-api-key': 'c76a886745d31b3fc29dee2e51df0075',

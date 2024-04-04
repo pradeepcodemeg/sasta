@@ -1,4 +1,3 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer , DefaultTheme, DarkTheme, } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import AuthStack from './AuthStack';
@@ -11,6 +10,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Geolocation from '@react-native-community/geolocation';
 import { GOOGLE_MAP_API } from "../services/Apiurl";
 import Geocoder from 'react-native-geocoding';
+import ApiDataService from "../services/Apiservice.service";
 
 function Routes() {
 
@@ -48,7 +48,8 @@ function Routes() {
     const getOneTimeLocation = async ()=>{
         Geolocation.getCurrentPosition(
             (position) => {
-                Geocoder.from( position.coords.latitude,position.coords.longitude)
+                console.log("position.coords.latitude,position.coords.longitude",position.coords.latitude,position.coords.longitude)
+                Geocoder.from(position.coords.latitude,position.coords.longitude)
                 .then(json => {
                     let addtitle = '';
                     let addtitle1 = '';
@@ -67,9 +68,10 @@ function Routes() {
                         lat:position.coords.latitude,
                         lng:position.coords.longitude
                     }
-                    console.log("++++++++++++++++",address)
+                    
                     AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
                     dispatch(setselectaddressData());
+                   
                 })
             },
             (error) => {
@@ -82,9 +84,6 @@ function Routes() {
         try {
             const user = await AsyncStorage.getItem('isLogin');
             if (user=='1') {
-                setAuthLoaded(true);
-                SplashScreen.hide();
-                setIslogin(true);
                 dispatch(setUserData());
                 dispatch(setselectaddressData());
                 dispatch(sethomeData());
@@ -93,14 +92,48 @@ function Routes() {
                 dispatch(setcartData());
                 dispatch(setorderData());
                 dispatch(setaddressData());
+                AsyncStorage.getItem('UserBase', (err, credentials) => {
+                    let  UserBase =  JSON.parse(credentials);
+                    AsyncStorage.getItem('Selectaddress', (err, addressdata) => {
+                        let  addressda =  JSON.parse(addressdata);
+                        gotocheckaviblefun(addressda.lat,addressda.lng,UserBase.userID,UserBase.userToken)
+                    })
+                })
+               
             } else {
                 SplashScreen.hide();
-                
-              
                 setAuthLoaded(true);
                 setIslogin(false);
             }
           } catch (error) {}
+    }
+    const gotocheckaviblefun = async (lat,lng,id,token)=>{
+        let body = {
+            address_latitude: lat,
+            address_longitude: lng,
+            // address_latitude: '30.157147',
+            // address_longitude: '74.970421',
+            user_id: id
+        }
+        let formData = new FormData();
+        for (let key in body) {
+            formData.append(key, body[key]);
+        }
+        ApiDataService.Uploadapi('check-address?token='+token, formData).then(response => {
+            setAuthLoaded(true);
+            SplashScreen.hide();
+            setIslogin(true);
+            if (response.data.status != 1) {
+                AsyncStorage.setItem('checkavilbale', '0');
+            }else{
+                AsyncStorage.setItem('checkavilbale', '1');
+            }
+        }).catch(e => {
+            AsyncStorage.setItem('checkavilbale', '0');
+            setAuthLoaded(true);
+            SplashScreen.hide();
+            setIslogin(true);
+        });
     }
 
     return (

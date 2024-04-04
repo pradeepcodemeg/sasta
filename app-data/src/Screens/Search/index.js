@@ -3,7 +3,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { View, Text,useWindowDimensions,StyleSheet,ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import SearchField  from './../../helper/SearchField';
 import ProductItem from '../../Components/ProductItem';
 import ApiDataService from "./../../services/Apiservice.service";
@@ -89,7 +89,7 @@ const Search = ({ navigation,route }) => {
     }
     const gotoProductlistfun = (type) =>{
         dispatch(setproductData('','',type,'','',''));
-        navigation.navigate('Product');
+        navigation.navigate('Product',{pagename:'Suggested for you'});
     }
     const gotosuncategoryfun = (data) =>{
         dispatch(setsubcategoryData(data.parent_id))
@@ -108,9 +108,9 @@ const Search = ({ navigation,route }) => {
             {
                 skletonshow==1&&
                 <View style={{width:"100%",height:'100%' , position: "relative"}}>
-                    <View style={{width:wp('72%'),margin:15}}>
+                    {/* <View style={{width:wp('72%'),margin:15}}>
                         <Text style={{...StylesGloble.listheading}}>Trending</Text>
-                    </View>
+                    </View> */}
                     <SkeletonPlaceholder borderRadius={4}  >
                         
                         <View style={{ flexDirection:"row"}}>
@@ -129,18 +129,18 @@ const Search = ({ navigation,route }) => {
                             <SkeletonPlaceholder.Item width={110} marginLeft={15} height={60} marginTop={25} borderRadius={50} />
                         </View>
                     </SkeletonPlaceholder>
-                    <View style={{width:wp('72%'),margin:15}}>
+                    {/* <View style={{width:wp('72%'),margin:15}}>
                         <Text style={{...StylesGloble.listheading}}>Suggested for you</Text>
-                    </View>
+                    </View> */}
                     <SkeletonPlaceholder borderRadius={4}  >
                         <View style={{flexDirection:"row", marginTop: 10, marginLeft: 0,width:'100%',height:180 }}>
                             <SkeletonPlaceholder.Item marginLeft={'5%'} width={"57%"} height={180} borderRadius={10}/>
                             <SkeletonPlaceholder.Item marginLeft={'5%'} width={"57%"} height={180} borderRadius={10}/>
                         </View>
                     </SkeletonPlaceholder>
-                    <View style={{width:wp('72%'),margin:15}}>
+                    {/* <View style={{width:wp('72%'),margin:15}}>
                         <Text style={{...StylesGloble.listheading}}>Popular Brands</Text>
-                    </View>
+                    </View> */}
                     <SkeletonPlaceholder borderRadius={4}  >
                         <View style={{flexDirection:"row", marginTop: 10, marginLeft: 0,width:'100%',height:180 }}>
                             <SkeletonPlaceholder.Item marginLeft={'5%'} width={"57%"} height={180} borderRadius={10}/>
@@ -167,9 +167,9 @@ const Search = ({ navigation,route }) => {
                         {
                             (categories.length >0)?(
                                 <>
-                                    <View style={{width:wp('72%')}}>
+                                    {/* <View style={{width:wp('72%')}}>
                                         <Text style={{...StylesGloble.listheading}}>Trending</Text>
-                                    </View>
+                                    </View> */}
                                     <View style={{marginTop:15}} >
                                         <FlatList
                                            
@@ -186,20 +186,20 @@ const Search = ({ navigation,route }) => {
                         {
                             (products.length >0)?(
                                 <>
-                                <View style={{...StylesGloble.oneline,marginTop:5}}>
+                                {/* <View style={{...StylesGloble.oneline,marginTop:5}}>
                                     <View style={{width:wp('72%')}}>
                                         <Text style={{...StylesGloble.listheading}}>Suggested for you</Text>
                                     </View>
                                     <TouchableOpacity onPress={()=>{gotoProductlistfun('')}}  style={{alignItems:"flex-end",justifyContent:"flex-end",marginLeft:32}}>
                                         <Text style={{...StylesGloble.listviewallfont}}>See all</Text>
                                     </TouchableOpacity>
-                                </View>
+                                </View> */}
                                 <View style={{marginTop:5,marginLeft:-4}}>
                                     <FlatList
                                         horizontal={true}
                                         data={products}
                                         showsHorizontalScrollIndicator={false}
-                                        renderItem={({item}) => <ProductItem prowdith={'50%'} item={item} navigation={navigation}/>}
+                                        renderItem={({item}) => <ProductItem prowdith={'100%'} item={item} navigation={navigation}/>}
                                         keyExtractor={(item, index) => index}
                                     />    
                                 </View>
@@ -209,9 +209,9 @@ const Search = ({ navigation,route }) => {
                         {
                             (brands.length >0)?(
                                 <>
-                                    <View style={{width:wp('72%'),marginTop:10}}>
+                                    {/* <View style={{width:wp('72%'),marginTop:10}}>
                                         <Text style={{...StylesGloble.listheading}}>Popular Brands</Text>
-                                    </View>
+                                    </View> */}
                                     <View style={{marginLeft:-4,marginTop:0}}>
                                         {
                                             <FlatList

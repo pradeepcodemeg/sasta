@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext,useRef } from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Geolocation from '@react-native-community/geolocation';
-import { PermissionsAndroid,Platform,TextInput,View, Text, StyleSheet,ScrollView,Image, TouchableOpacity } from 'react-native';
+import { PermissionsAndroid,Platform,TextInput,View, Text, StyleSheet,ScrollView,Image, TouchableOpacity,Dimensions } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import Toast from 'react-native-simple-toast';
 import MapView, {Marker} from 'react-native-maps';
@@ -14,15 +14,22 @@ import { GOOGLE_MAP_API } from "../../services/Apiurl";
 import ApiDataService from "./../../services/Apiservice.service";
 import LoadingPage  from './../../helper/LoadingPage';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import Geocoder from 'react-native-geocoding';
 
+
+Geocoder.init(GOOGLE_MAP_API);
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const AddAddress = ({ navigation,route }) => {
 
     const dispatch = useDispatch();
     const ref = useRef();
-
+    
     const pagename = route.params.type;
     const action = route.params.action;
     const editdata = route?.params?.data;
+    const latitudeDelta =0.000415;
+    const longitudeDelta = 0.00295;
 
     const mapRef = useRef(null);
     
@@ -38,21 +45,17 @@ const AddAddress = ({ navigation,route }) => {
 
     const current_add = selectaddresstate ? selectaddresstate.address : null
 
-    useEffect(() => {
-        ref.current?.setAddressText(current_add)
-      }, [])
+    const [currentLocation, setCurrentLocation] = useState('');
 
-
-    const [ currentLongitude, setCurrentLongitude ]  = useState(chooselng);
-    const [ currentLatitude, setCurrentLatitude ] = useState(chooselat);
-
-    let pageloade = [{
-        latitude: chooselat,
-        longitude: chooselng,
-        title: "Your Location",
-    }]
-
-    const [marker, setMarker] = useState(pageloade);
+    const [marker, setmarker] = useState([
+        {
+            id: 1,
+            coords: {
+                latitude: chooselat,
+                longitude: chooselng,
+            }
+        }
+    ]);
     const [name,setname] = useState(fullname)
     const [Title,setTitle]= useState('');
     const [checkaddtilte,setcheckaddtilte]=useState(0);
@@ -91,11 +94,38 @@ const AddAddress = ({ navigation,route }) => {
             setaddresslng(editdata.longitude);
             ref.current?.setAddressText(editdata.address_line1);
             setuser_address_id(editdata.id);
+            addnewdatainfirst(editdata.latitude,editdata.longitude)
+        }else{
+            requestLocationPermission()
         }
     },[])
 
-    useEffect(() => {
-        const requestLocationPermission = async () => {
+    const addnewdatainfirst = (lat,lng)=>{
+        setCurrentLocation({
+            latitude: Number(lat),
+            longitude:  Number(lng),
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        mapRef.current?.animateToRegion({
+            latitude:  Number(lat),
+            longitude:  Number(lng),
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        setmarker([
+            {
+                id: 1,
+                coords: {
+                    latitude: lat,
+                    longitude: lng,
+                }
+            }
+        ]);
+    }
+
+   
+    const requestLocationPermission = async () => {
         if (Platform.OS === 'ios') {
             getOneTimeLocation();
         } else {
@@ -114,24 +144,12 @@ const AddAddress = ({ navigation,route }) => {
                     console.warn(err);
                 }
             }
-        };
-        requestLocationPermission();
-  
-    },[currentLongitude])
+    };
 
     const getOneTimeLocation = () => {
         Geolocation.getCurrentPosition(
             (position) => {
-                mapRef.current.animateCamera(
-                    {
-                        zoom: 15,
-                        pitch: 2,
-                        heading: 2,
-                        altitude: 2,
-                        center: { ...position.coords },
-                    },
-                    { duration: 1000 }
-                );
+                addnewdatainfirst(position.coords.latitude,position.coords.longitude);
             },
             (error) => {
                 getOneTimeLocation();
@@ -142,87 +160,110 @@ const AddAddress = ({ navigation,route }) => {
     const calltoastmessage  = (data) => {
         Toast.showWithGravity(data, Toast.LONG, Toast.BOTTOM);
     };
-    const updateaddressfun = () =>{
+    const gotocheckaviblefun = (type)=>{
         if(Title=='' || Title==null ||Title == undefined){
             calltoastmessage('Please add title');
         }
         else{
-          
             let body = {
-                action : "update_address",
-                user_address_id:user_address_id,
-                user_id:userID,
-                state:"state",
-                city:"city",
-                landmark:Landmark,
-                address_line1 : fulladdress,
-                address_line2 : housenumber,
-                latitude:addresslat,
-                longitude:addresslng,
-                phone:phone,
-                type:Title
+                address_latitude: addresslat,
+                address_longitude: addresslng,
+                user_id:userID
             }
-            setLoading(true);
             let formData = new FormData();
             for (let key in body) {
                 formData.append(key, body[key]);
             }
-            ApiDataService.Uploadapi('user-addresses?token='+userToken,formData).then(response => {
-                setLoading(false);
-                if(response.data.status==1)
-                {
-                    dispatch(setaddressData());
-                    navigation.navigate('Address',{type:pagename});
-                }
-                else{
-                    calltoastmessage(response.data.msg);
+            setLoading(true);
+            ApiDataService.Uploadapi('check-address?token='+userToken, formData).then(response => {
+                if (response.data.status == 1) {
+                    if(type==1){
+                        submitfun();
+                    }else{
+                        updateaddressfun();
+                    }
+                }else{
+                    setLoading(false);
+                    calltoastmessage('Unfortunately, we do not provide service in this address. Please select another address. Thank you.');
                 }
             }).catch(e => {
-                console.log("error",e);
+                setLoading(false);
+                calltoastmessage('Unfortunately, we do not provide service in this address. Please select another address. Thank you.');
+                console.log("error", e);
             });
         }
+    }
+
+
+    const updateaddressfun = () =>{
+        let body = {
+            action : "update_address",
+            user_address_id:user_address_id,
+            user_id:userID,
+            state:"state",
+            city:"city",
+            landmark:Landmark,
+            address_line1 : fulladdress,
+            address_line2 : housenumber,
+            latitude:addresslat,
+            longitude:addresslng,
+            phone:phone,
+            type:Title
+        }
+        let formData = new FormData();
+        for (let key in body) {
+            formData.append(key, body[key]);
+        }
+        ApiDataService.Uploadapi('user-addresses?token='+userToken,formData).then(response => {
+            setLoading(false);
+            if(response.data.status==1)
+            {
+                dispatch(setaddressData());
+                navigation.navigate('Address',{type:pagename});
+            }
+            else{
+                calltoastmessage(response.data.msg);
+            }
+        }).catch(e => {
+            setLoading(false);
+            console.log("error",e);
+        });
+        
         
     }
 
     const submitfun = () =>{
-        if(Title=='' || Title==null ||Title == undefined){
-            calltoastmessage('Please add title');
+        let body = {
+            action : "add_address",
+            user_id:userID,
+            state:"state",
+            city:"city",
+            landmark:Landmark,
+            address_line1 : fulladdress,
+            address_line2 : housenumber,
+            latitude:addresslat,
+            longitude:addresslng,
+            phone:phone,
+            type:Title
         }
-        else{
-          
-            let body = {
-                action : "add_address",
-                user_id:userID,
-                state:"state",
-                city:"city",
-                landmark:Landmark,
-                address_line1 : fulladdress,
-                address_line2 : housenumber,
-                latitude:addresslat,
-                longitude:addresslng,
-                phone:phone,
-                type:Title
-            }
-            setLoading(true);
-            let formData = new FormData();
-            for (let key in body) {
-                formData.append(key, body[key]);
-            }
-            ApiDataService.Uploadapi('user-addresses?token='+userToken,formData).then(response => {
-                setLoading(false);
-                if(response.data.status==1)
-                {
-                    dispatch(setaddressData());
-                    navigation.navigate('Address',{type:pagename});
-                }
-                else{
-                    calltoastmessage(response.data.msg);
-                }
-            }).catch(e => {
-                console.log("error",e);
-            });
+        let formData = new FormData();
+        for (let key in body) {
+            formData.append(key, body[key]);
         }
-        
+        ApiDataService.Uploadapi('user-addresses?token='+userToken,formData).then(response => {
+            setLoading(false);
+            if(response.data.status==1)
+            {
+                dispatch(setaddressData());
+                navigation.navigate('Address',{type:pagename});
+            }
+            else{
+                calltoastmessage(response.data.msg);
+            }
+        }).catch(e => {
+            setLoading(false);
+            console.log("error",e);
+        });
     }
 
     const checktitlefun = (type) =>{
@@ -244,29 +285,61 @@ const AddAddress = ({ navigation,route }) => {
         setfulladdress(data.description);
         setaddresslat(details.geometry.location.lat);
         setaddresslng(details.geometry.location.lng);
+        
+        setCurrentLocation({
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        mapRef.current?.animateToRegion({
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        setmarker([
+            {
+                id: 1,
+                coords: {
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng
+                }
+            }
+        ]);
     }
     const getFormattedAddress = (lat, lng) => {
        
-        // Geocoder.from(lat, lng)
-        //     .then((json) =>
-              
-        //     )
-        //     .catch((error) => {
-        //         console.warn(error);
-               
-        //     });
     };
-    const displayMarker = (marker, index) => {
-        return (
-            <Marker
-                key={index}
-                coordinate={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }}
-                title={marker.title}
-                description=''
-            >
-                <Image source={imagePath.Pinloc} style={{ height: 35, width: 35 }} />
-            </Marker>
-        )
+   
+    const onMapPress = (e)=>{
+        setCurrentLocation({
+            latitude: e.nativeEvent.coordinate.latitude,
+            longitude: e.nativeEvent.coordinate.longitude,
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        mapRef.current?.animateToRegion({
+            latitude: e.nativeEvent.coordinate.latitude,
+            longitude: e.nativeEvent.coordinate.longitude,
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta
+        });
+        setmarker([
+            {
+                id: 1,
+                coords: {
+                    latitude: e.nativeEvent.coordinate.latitude,
+                    longitude: e.nativeEvent.coordinate.longitude,
+                }
+            }
+        ]);
+        Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude).then((json) =>{
+            var location = json.results[0].formatted_address;
+            ref.current?.setAddressText(location);
+        }).catch((error) => {
+            console.warn(error);
+        });
     }
     
    
@@ -280,29 +353,33 @@ const AddAddress = ({ navigation,route }) => {
                 </View>
             }
             <View style={{width:"100%",height:"30%"}}>
-                <MapView
-                    style={{width:wp('100%'),height:hp('100%'),flex:1}}
+                {
+                    currentLocation&&
+                    <MapView
+                    style={{width:wp('100%'),height:'100%'}}
                     onRegionChangeComplete={({ latitude, longitude }) =>
                         getFormattedAddress(latitude, longitude)
                     }
-                    showsUserLocation={false}  
-                    zoomEnabled={true}  
-                    showsCompass={false}
-                    ref={(map) => (mapRef.current = map)}
-                    zoomControlEnabled={false} 
-                    
-                    initialRegion={{
-                        latitude: currentLatitude,
-                        longitude: currentLongitude,
-                        latitudeDelta: 0.009,
-                        longitudeDelta: 0.009,
-                    }}>
-                     {/* {Array.isArray(marker) && marker.length > 0 && marker.map((mark, index) => {
-                        return displayMarker(mark, index)
-                    })} */}
+                    ref={mapRef}  
+                    onPress={e => onMapPress(e)}
+                    initialRegion={currentLocation}>
+                    {
+                        (marker) ?
+                        (marker.map((val, i) => {
+                            return (
+                                <Marker coordinate={
+                                    {
+                                        latitude: parseFloat(val.coords.latitude),
+                                        longitude: parseFloat(val.coords.longitude),
+                                    }
+                                }  key={i}></Marker>)
+                        })) : null
+                    }
                 </MapView>
+                }
+                
             </View>
-            <View style={{position: "absolute", top: 100,zIndex:55,  right: "5%",width:'90%',height:'auto',backgroundColor:'#ffffff',borderRadius:10}}> 
+            <View style={{position: "absolute", top: 70,zIndex:55,  right: "1%",width:'98%',height:'auto',backgroundColor:'#ffffff',borderRadius:10}}> 
                 <GooglePlacesAutocomplete
                     ref={ref}
                     placeholder='Search for area'
@@ -318,57 +395,73 @@ const AddAddress = ({ navigation,route }) => {
                     styles={{
                         container: {
                             flex: 1,
-                            height:'100%',
+                            height:'auto',
                             padding:5,
-                            marginTop:0,
-                            width:"100%"
+                            marginTop:-5,
+                            color:"#000000",
+                            width:'100%'
                         },
                         textInputContainer: {
                             flexDirection: 'row',
+                            color:"#000000",
                         },
                         textInput: {
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: '#f9f9f9',
                             height: 50,
-                            borderRadius: 5,
                             paddingVertical: 5,
                             paddingHorizontal: 10,
-                            fontSize: 18,
+                            fontSize: 14,
                             flex: 1,
+                            borderRadius: 5,
+                            flexDirection: 'row',
+                            marginTop: 10,
+                            elevation: 5,
+                            borderWidth: 1,
+                            paddingLeft:25,
+                            borderColor: '#D1D1D1',
+                            color:"#000000",
                         },
                         predefinedPlacesDescription: {
-                            color: '#1faadb'
+                            color: '#1faadb',
+                            
                         },
                         poweredContainer: {
                             justifyContent: 'flex-end',
-                            backgroundColor:"red",
+                            placeholderTextColor: 'red',
                             alignItems: 'center',
                             borderBottomRightRadius: 5,
                             borderBottomLeftRadius: 5,
                             borderColor: '#c8c7cc',
                             borderTopWidth: 0.5,
                             backgroundColor: '#edf0f1',
-                            marginLeft:"5%",
-                            width:"90%",
+                            width:windowWidth,
+                            color:"#000000",
                             padding:15,
-                            height:'100%',
+                            height:50
                         },
                         powered: {},
-                        listView: {},
+                        listView: {
+                            backgroundColor:"#000000",  
+                        },
                         row: {
                             zIndex:9999,
                             padding: 13,
                             height: 50,
-                            color:"#000000",
+                            backgroundColor:"#ffffff",
                             flexDirection: 'row'
                         },
                         separator: {
                             height: 0.5,
                             backgroundColor: '#c8c7cc',
+                           
                         },
-                        description: {},
+                        description: {
+                            color:"#000000",
+                        },
                         loader: {
                             flexDirection: 'row',
                             justifyContent: 'flex-end',
+                            
                             height: 20,
                         },
                     }}/>
@@ -410,11 +503,11 @@ const AddAddress = ({ navigation,route }) => {
                     {
                         (action=='2')?(
                             <View style={{marginTop:15,margin:15}}>
-                                <ButtonField label={'Update Address'} submitfun={updateaddressfun}/>
+                                <ButtonField label={'Update Address'} submitfun={()=>gotocheckaviblefun('2')}/>
                             </View>
                         ):(
                             <View style={{marginTop:15,margin:15}}>
-                                <ButtonField label={'Save Address'} submitfun={submitfun}/>
+                                <ButtonField label={'Save Address'} submitfun={()=>gotocheckaviblefun('1')}/>
                             </View>
                         )
                     }

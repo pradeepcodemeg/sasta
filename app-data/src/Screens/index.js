@@ -24,4 +24,5 @@ export {default as Search} from './Search/index';
 export {default as Product} from './Product/index';
 export {default as GooglePlacesInput} from './GooglePlacesInput/index';
 export {default as Notification} from './Notification/index';
-export {default as WalletSeeAll} from './WalletSeeAll'
+export {default as WalletSeeAll} from './WalletSeeAll';
+export {default as OrderDetail} from './OrderDetail'

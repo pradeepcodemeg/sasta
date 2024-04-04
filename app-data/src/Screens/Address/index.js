@@ -3,7 +3,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { View, Text, ScrollView,StyleSheet,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 
 import Homeadd from '../../assets/img/homeadd.svg';
@@ -152,7 +152,11 @@ const Address = ({ navigation,route }) => {
                     <Text style={{fontSize:20,fontWeight:"500",color:"#9DC45A",marginTop:0}}>+</Text>
                     <Text style={{fontSize:20,fontWeight:"500",color:"#9DC45A",marginLeft:10}}>Add New Address</Text>
                 </TouchableOpacity>
-                <ScrollView nestedScrollEnabled={true} contentContainerStyle={{paddingBottom:110}}>
+                <ScrollView 
+                    nestedScrollEnabled={true} 
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{paddingBottom:110}}>
                 {
                     (addresslist !=null)?(
                         addresslist.map((item,index)=>

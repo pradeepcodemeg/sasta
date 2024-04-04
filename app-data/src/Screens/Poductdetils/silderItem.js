@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import { Dimensions, View,StyleSheet,ImageBackground,Image,TouchableOpacity } from 'react-native';
 
 

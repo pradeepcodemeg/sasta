@@ -2,13 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { View, Text, ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
-import imagePath from '../constants/imagePath';
+import imagePath from '../constants/ImagePath';
 import { StylesGloble } from '../helper/Globlecss';
 
 const OfferComp = (props) => {
    
     return (
-        <TouchableOpacity style={{margin:5,height:100,borderRadius:10}} >
+        <TouchableOpacity onPress={()=>props.gotoweblink(props.item.destination)}style={{margin:5,height:100,borderRadius:10}} >
             {
                 (props.item.image)?(
                     <Image style={{...StylesGloble.offerhomeimage}}  source={{uri :props.item.image}}/>

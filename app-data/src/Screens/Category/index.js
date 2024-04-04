@@ -3,7 +3,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { View, Text,ActivityIndicator,StyleSheet, ScrollView,Modal,FlatList,Image, TouchableOpacity,ImageBackground } from 'react-native';
 import ButtonField  from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import HeaderComp from '../../Components/HeaderComp';
 import TabItem from '../../helper/Tab';
 import CategoryComp from '../../Components/CategoryComp';
@@ -29,33 +29,10 @@ const Category = ({ navigation,route }) => {
     const [alldataupload,setalldataupload ]= useState(0);
 
     const gotosuncategoryfun = (data) =>{
-        dispatch(setsubcategoryData(data.parent_id))
+        dispatch(setsubcategoryData(data.id))
         navigation.navigate('SubCategory',{data:data})
     }
 
-    const addnewdata = () =>{
-        if(Activeloading == false && alldataupload ==0)
-        {
-            setActiveloading(true);
-            let newpageLoad = Number(pageLoad)+1; 
-            setpageLoad(newpageLoad);
-            let url = 'categories?order=DESC&order_by=id&token='+userToken+'&row_count='+row_count+'&page='+newpageLoad;
-            ApiDataService.Getapi(url).then(response => {
-               
-                if(response.data.length > 0)
-                {
-                    let newarray =[...categorieslist,...response.data];
-                    setcategorieslist(newarray);
-                }
-                else{
-                    setalldataupload(1);
-                }
-                setActiveloading(false);
-            }).catch(e => {
-                setActiveloading(false);
-            });
-        }
-    }
     const renderFooter = () => {
         return (
             <>
@@ -76,7 +53,7 @@ const Category = ({ navigation,route }) => {
     return (
         <>
             <HeaderComp text={'All Categories'} navigation={navigation} type={'1'}/>
-            <View style={{...StylesGloble.container,position:"relative",padding:5,paddingBottom:15}}>
+            <View style={{...StylesGloble.container,position:"relative",padding:5,paddingBottom:15,width:"100%"}}>
                 {
                     (categorieslist)&&(
                         <FlatList
@@ -86,7 +63,6 @@ const Category = ({ navigation,route }) => {
                             renderItem={({item}) => <CategoryComp item={item} navigation={navigation}  gotosuncategoryfun={gotosuncategoryfun}/>}
                             keyExtractor={(item, index) => index}
                             style={{marginBottom:50}}
-                            onEndReached={addnewdata}
                             onEndReachedThreshold={0}
                             ListFooterComponent={renderFooter}
                         />  

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Text,Modal,PermissionsAndroid,Image,StyleSheet,View,SafeAreaView,Dimensions,ScrollView, TouchableOpacity} from 'react-native'
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import Geolocation from '@react-native-community/geolocation';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAP_API } from "./../../services/Apiurl";
@@ -10,6 +10,7 @@ import Geocoder from 'react-native-geocoding';
 import { setselectaddressData } from '../../Redux/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StylesGloble } from './../../helper/Globlecss';
+import ApiDataService from "./../../services/Apiservice.service";
 
 import Homeadd from '../../assets/img/homeadd.svg';
 import Officeadd from '../../assets/img/Officeadd.svg';
@@ -23,7 +24,7 @@ const windowHeight = Dimensions.get('window').height;
 
 
 const GooglePlacesInput= ({ navigation, route }) => {
-
+    const pagetype = route?.params;
     const placesRef = useRef();
     const dispatch = useDispatch();
 
@@ -33,6 +34,10 @@ const GooglePlacesInput= ({ navigation, route }) => {
     const addresslist = addressstate ?addressstate.data : null;
 
     const selectaddresstate = useSelector((state) => state.SelectAddressReducer.data);
+
+    const usaerstate = useSelector((state) => state.UserReducer.userData);
+    const userID = usaerstate ? usaerstate.userID : null;
+    const userToken = usaerstate ? usaerstate.userToken : null;
    // placesRef.current?.setAddressText(selectaddresstate.address);
 
   
@@ -137,22 +142,48 @@ const GooglePlacesInput= ({ navigation, route }) => {
             lat:details.geometry.location.lat,
             lng:details.geometry.location.lng
         }
-        AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
-        dispatch(setselectaddressData());
-        navigation.goBack()
+        checkaviablibity(address);
     }
     const chooseaddressfun = (item) =>{
-        console.log("=>>>>>>>",item)
         let address = {
             title:item.type,
             address:item.address_line1,
             lat:item.latitude,
             lng:item.longitude
         }
-      
+        checkaviablibity(address);
+    }
+
+    const checkaviablibity = (address) =>{
         AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
         dispatch(setselectaddressData());
-        navigation.goBack()
+        if(pagetype == 1){
+            let body = {
+                address_latitude: address.lat,
+                address_longitude: address.lng,
+                user_id: userID
+            }
+            let formData = new FormData();
+            for (let key in body) {
+                formData.append(key, body[key]);
+            }
+            ApiDataService.Uploadapi('check-address?token='+userToken, formData).then(response => {
+                if (response.data.status == 1) {
+                    AsyncStorage.setItem('checkavilbale','1');
+                    navigation.navigate('Home');
+                }else{
+                    AsyncStorage.setItem('checkavilbale','1');
+                    navigation.navigate('Home');
+                  
+                }
+            }).catch(e => {
+                AsyncStorage.setItem('checkavilbale','1');
+                navigation.navigate('Home');
+                console.log("error", e);
+            });
+        }else{
+            navigation.goBack();
+        }
     }
   
     return (
@@ -188,28 +219,37 @@ const GooglePlacesInput= ({ navigation, route }) => {
                                     flex: 1,
                                     height:'auto',
                                     padding:15,
-                                    marginTop:10,
-                                    width:windowWidth,
-                                    
+                                    marginTop:-5,
+                                    color:"#000000",
+                                    width:windowWidth
                                 },
                                 textInputContainer: {
                                     flexDirection: 'row',
+                                    color:"#000000",
                                 },
                                 textInput: {
-                                    backgroundColor: '#9DC45A10',
-                                    height: 60,
-                                    borderRadius: 5,
+                                    backgroundColor: '#f9f9f9',
+                                    height: 50,
                                     paddingVertical: 5,
                                     paddingHorizontal: 10,
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     flex: 1,
+                                    borderRadius: 5,
+                                    flexDirection: 'row',
+                                    marginTop: 10,
+                                    elevation: 5,
+                                    borderWidth: 1,
+                                    paddingLeft:25,
+                                    borderColor: '#D1D1D1',
+                                    color:"#000000",
                                 },
                                 predefinedPlacesDescription: {
-                                    color: '#1faadb'
+                                    color: '#1faadb',
+                                    
                                 },
                                 poweredContainer: {
                                     justifyContent: 'flex-end',
-                                    backgroundColor:"red",
+                                    placeholderTextColor: 'red',
                                     alignItems: 'center',
                                     borderBottomRightRadius: 5,
                                     borderBottomLeftRadius: 5,
@@ -217,26 +257,33 @@ const GooglePlacesInput= ({ navigation, route }) => {
                                     borderTopWidth: 0.5,
                                     backgroundColor: '#edf0f1',
                                     width:windowWidth,
+                                    color:"#000000",
                                     padding:15,
                                     height:50
                                 },
                                 powered: {},
-                                listView: {},
+                                listView: {
+                                    backgroundColor:"#000000",  
+                                },
                                 row: {
                                     zIndex:9999,
                                     padding: 13,
                                     height: 50,
-                                    color:"#000000",
+                                    backgroundColor:"#ffffff",
                                     flexDirection: 'row'
                                 },
                                 separator: {
                                     height: 0.5,
                                     backgroundColor: '#c8c7cc',
+                                   
                                 },
-                                description: {},
+                                description: {
+                                    color:"#000000",
+                                },
                                 loader: {
                                     flexDirection: 'row',
                                     justifyContent: 'flex-end',
+                                    
                                     height: 20,
                                 },
                             }}
@@ -253,7 +300,7 @@ const GooglePlacesInput= ({ navigation, route }) => {
                         <Text style={{fontSize:12,fontWeight:"600",color:"#9DC45A"}}>Using GPS</Text>
                     </View>
                 </TouchableOpacity>
-                <View style={{marginTop:120,marginLeft:12}}>
+                <View style={{marginTop:90,marginLeft:12}}>
                     <View style={{marginTop:50}}>
                         {
                             (addresslist !=null)?(
@@ -281,9 +328,9 @@ const GooglePlacesInput= ({ navigation, route }) => {
                                                 )
                                             }
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={()=>{ chooseaddressfun(item)}}  style={{width:"40%",marginLeft:10,marginTop:0}}>
-                                                <Text style={{fontSize:16,fontWeight:"500",color:"#000000"}}>{item.type}</Text>
-                                                <Text style={{fontSize:12,fontWeight:"400",color:"#9D9D9D",marginTop:5,marginBottom:0}}>{item.address_line1}</Text>
+                                            <TouchableOpacity onPress={()=>{ chooseaddressfun(item)}}  style={{width:"75%",marginLeft:10,marginTop:0}}>
+                                                <Text style={{fontSize:16,fontWeight:"500",color:"#000000",textTransform: 'capitalize'}}  >{item.type}</Text>
+                                                <Text style={{fontSize:12,fontWeight:"400",color:"#9D9D9D",marginTop:5,marginBottom:0,textTransform: 'capitalize'}}>{item.address_line1}</Text>
                                             </TouchableOpacity>
                                            
                                         </View>
@@ -319,14 +366,14 @@ const styles = StyleSheet.create({
     },
     currentlolist:{
         position:"absolute",
-        top:110,
+        top:90,
         left:15,
         zIndex:99
     },
     crosshight:{
         backgroundColor: '#ffffff',
         padding:15,
-        width:"30%",
+        width:"36%",
     },
     Textcass: {
         fontSize: 18,

@@ -85,7 +85,6 @@ export const subscribeLocation = (updateLocation) => {
     let watchID = Geolocation.watchPosition(
         ({ coords }) => {
             updateLocation({ lat: coords.latitude, long: coords.longitude })
-            console.log("subscribe", coords)
         },
         (error) => {
             console.log("subscribe error", error)

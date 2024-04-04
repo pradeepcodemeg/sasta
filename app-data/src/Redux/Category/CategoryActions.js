@@ -10,14 +10,18 @@ export const setcategoryData = () => async (dispatch) => {
           AsyncStorage.getItem('UserBase', (err, credentials) => {
                let  UserBase =  JSON.parse(credentials);
                dispatch({ type:SET_CATEGORY_DATA });
-               let url = 'categories?order=DESC&order_by=id&parent_id=0&row_count=24&token='+UserBase.userToken;
+               let url = 'categories?order=DESC&order_by=id&row_count=50&parent_id=0&token='+UserBase.userToken;
                ApiDataService.Getapi(url).then(response =>{
-                    let data = {
-                         data : response.data,
+                    let alldata = response.data;
+                    let newdata = alldata.filter((item)=>item.active=='1') 
+                    let secoundnewdata = newdata.filter((item)=>item.sub_categories > 0) 
+                    let listdata = {
+                         data : secoundnewdata,
                          row_count:24,
                          page: 1
                     } 
-                    dispatch({ type:SET_CATEGORY_DATA, payload: data });
+                    
+                    dispatch({ type:SET_CATEGORY_DATA, payload: listdata });
                });
           })
      } catch (error) {

@@ -7,7 +7,6 @@ const height= Dimensions.get('window').height;
 export const StylesGloble = StyleSheet.create({
     container: {
         flex: 1,
-       
         backgroundColor:"#FFFFFF"
     },
     ScreenHorigental:{
@@ -249,15 +248,15 @@ export const StylesGloble = StyleSheet.create({
     },
     
     catView: {
-        padding:5,
-        margin:5,
+        padding:0,
+        margin:4,
         backgroundColor:"#ffffff",
         height:110,
         alignItems:"center",
         elevation: 2,
         flex:1,
         position:"relative",
-        borderRadius:5
+        borderRadius:0
     }, 
     searchcatbtn:{
         flexDirection:"row",
@@ -344,6 +343,13 @@ export const StylesGloble = StyleSheet.create({
     bottomsec:{
         width:wp('25%'),
         alignItems:"center",
+    },
+    locationnotaviable:{
+        marginTop:"20%",
+        height:"80%",
+        width:"100%",
+        justifyContent:"center",
+        alignItems:"center"
     }
     
     

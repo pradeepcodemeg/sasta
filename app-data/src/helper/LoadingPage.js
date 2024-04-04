@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet,View, Animated,ImageBackground,Image } from 'react-native';
-import imagePath from '../constants/imagePath';
+import imagePath from '../constants/ImagePath';
 import FastImage from 'react-native-fast-image';
 
 const LoadingPage= () => {

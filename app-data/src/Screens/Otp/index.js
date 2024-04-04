@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { PermissionsAndroid, Platform, View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import ButtonField from './../../helper/ButtonField';
 import { StylesGloble } from './../../helper/Globlecss';
-import imagePath from './../../constants/imagePath';
+import imagePath from './../../constants/ImagePath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import OTPTextView from 'react-native-otp-textinput';
 import Sclogo from '../../assets/img/sclogo.svg';
@@ -54,10 +54,8 @@ const Otp = ({ navigation, route }) => {
                         lat:position.coords.latitude,
                         lng:position.coords.longitude
                     }
-                   
                     AsyncStorage.setItem('Selectaddress', JSON.stringify(address));
                     dispatch(setselectaddressData());
-                   
                 })
                 .catch(error => console.warn(error));
             },
@@ -96,8 +94,6 @@ const Otp = ({ navigation, route }) => {
                 }
                 setLoading(true);
                 ApiDataService.Uploadapi('otp/verify-otp', formData).then(response => {
-                    setLoading(false);
-
                     if (response.data.status == 1) {
 
                         if (response.data.user_id) {
@@ -115,10 +111,13 @@ const Otp = ({ navigation, route }) => {
                             dispatch(setcartData());
                             dispatch(setorderData());
                             dispatch(setaddressData());
-                            navigation.navigate('UserStack');
+                            setTimeout(() => {
+                                setLoading(false);
+                                navigation.navigate('UserStack');
+                            }, 3000)
                         }
                         else {
-
+                            setLoading(false);
                             navigation.navigate('Signup', {
                                 mobile: mobile,
                                 otp: otp
@@ -126,6 +125,7 @@ const Otp = ({ navigation, route }) => {
                         }
                     }
                     else {
+                        setLoading(false);
                         otpInput.current.clear();
                         calltoastmessage("Invalid OTP");
                     }
@@ -144,7 +144,6 @@ const Otp = ({ navigation, route }) => {
         setLoading(true);
         ApiDataService.Getapi('otp/send/' + mobile).then(response => {
             setLoading(false);
-
             if (response.data.status == 1) {
                 setotp(response.data.otp);
             }
